@@ -3,3 +3,7 @@ job_agent/
 
 # environment variables
 *.env
+
+
+# roadmap file
+project_roadmap.md
