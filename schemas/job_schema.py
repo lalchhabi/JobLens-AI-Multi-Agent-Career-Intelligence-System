@@ -4,12 +4,17 @@ from typing import List, Optional
 
 # Define job schema
 class JobSchema(BaseModel):
-    # title of the job
-    title: Optional[str] = Field(description = [])
-    company: Optional[str] = None
+    title: Optional[str] = Field(default=None,
+                                 description = "Title of the job")
+    company: Optional[str] = Field(default=None,
+                                   description="Hiring company name")
 
-    required_skills: List[str] = []
-    preferred_skills: List[str] = []
+    required_skills: List[str] = Field(default_factory=list,
+                                       description="Required skills for the role")
+    preferred_skills: List[str] = Field(default_factory=list,
+                                        description="Additional preferred skills but not mandatory")
 
-    experience_level: Optional[str] = None
-    responsibilities: List[str] = []
+    experience_level: Optional[str] = Field(default=None,
+                                            description="Required experience level for the job")
+    responsibilities: List[str] = Field(default_factory=list,
+                                        description="List of duties and responsibilities")

@@ -1,9 +1,19 @@
+
+# python cache files
+__pycache__
+
 # virtual environment
 job_agent/
 
 # environment variables
 *.env
 
+# pdf files and json files
+*.pdf
+*.json
 
 # roadmap file
 project_roadmap.md
+
+# test files 
+test.py
