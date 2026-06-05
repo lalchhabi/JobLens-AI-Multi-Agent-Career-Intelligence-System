@@ -5,7 +5,6 @@ from langchain_core.output_parsers import PydanticOutputParser
 from services.llm_service import get_llm_model
 from prompts.resume_prompt import RESUME_PROMPT
 from schemas.resume_schema import ResumeSchema
-from tools.pdf_parser import PDFparser
 
 class ResumeAgent:
     """ResumeAgent is responsible for converting raw resume text into a structured ResumeSchema using an LLM.
