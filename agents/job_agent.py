@@ -7,7 +7,9 @@ from services.llm_service import get_llm_model
 from schemas.job_schema import JobSchema
 
 
-class JOBAGENT:
+class JobAgent:
+    """JobAgent is responsible for converting raw job description text into structure JobSchema using an LLM
+    """
     def __init__(self):
         # Initialize llm model
         self.llm_model = get_llm_model()
