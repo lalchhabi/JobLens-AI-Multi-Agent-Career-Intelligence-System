@@ -8,7 +8,7 @@ from services.llm_service import get_llm_model
 from schemas.resume_schema import ResumeSchema
 from schemas.job_schema import JobSchema
 from schemas.gap_schema import GapSchema
-import json
+
 class InterviewAgent:
     """
     Generates interview questions based on:
