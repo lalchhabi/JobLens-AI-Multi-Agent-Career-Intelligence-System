@@ -316,7 +316,7 @@ Response:
   "resume_analysis": {},
   "job_analysis": {},
   "gap_analysis": {},
-  "interview_questions": []
+  "interview_analysis": []
 }
 ```
 

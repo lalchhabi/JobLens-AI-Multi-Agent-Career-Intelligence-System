@@ -1,5 +1,9 @@
 # Import libraries
 import fitz
+from utils.logger import get_logger
+
+# Initialize module-level logger
+logger = get_logger(__name__)
 
 class PDFparser:
     """Utility class for extracting text from PDF documents
@@ -15,6 +19,7 @@ class PDFparser:
             str: Extracted text from pdf
         """
 
+        logger.info(f"Extracting text from {pdf_path}")
         try:
             text = ""
             
