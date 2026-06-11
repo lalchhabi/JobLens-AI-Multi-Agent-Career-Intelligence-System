@@ -319,54 +319,6 @@ Response:
   "interview_analysis": []
 }
 ```
-
----
-
-# 🧭 Development Roadmap (10–15 Days)
-
-## 🟢 Phase 1: Core System (Days 1–6)
-
-### Day 1–2
-
-* Setup FastAPI
-* Setup project structure
-* Setup LLM connection
-
-### Day 3–4
-
-* Resume parser agent
-* Job analyzer agent
-
-### Day 5–6
-
-* Gap analysis agent (core logic)
-
----
-
-## 🟡 Phase 2: Intelligence Layer (Days 7–10)
-
-* Interview question generator
-* Structured JSON outputs
-* Prompt optimization
-* Basic UI
-
----
-
-## 🔵 Phase 3: Agentic Expansion (Days 11–13)
-
-* LangGraph orchestration
-* GitHub tool integration
-* Web scraping tool
-
----
-
-## 🔴 Phase 4: Polish & Deployment (Days 14–15)
-
-* UI improvement
-* Logging
-* Error handling
-* Deployment (Render / Railway / HuggingFace Spaces)
-
 ---
 
 # 📈 Future Improvements
@@ -376,6 +328,3 @@ Response:
 * RAG-based resume improvement system
 * Personalized AI recruiter chatbot
 * MCP server expansion (filesystem, browser automation)
-
-
-
