@@ -369,17 +369,6 @@ Response:
 
 ---
 
-# 🧠 Key Features to Highlight in CV
-
-* Multi-agent AI system using LangGraph
-* Tool-augmented LLM agents (GitHub + Web + File tools)
-* Structured job-resume semantic matching system
-* AI-driven skill gap analysis engine
-* Interview preparation generator
-* Modular agent architecture design
-
----
-
 # 📈 Future Improvements
 
 * Real-time LinkedIn job ingestion
@@ -388,11 +377,5 @@ Response:
 * Personalized AI recruiter chatbot
 * MCP server expansion (filesystem, browser automation)
 
----
 
-# 🏁 Final Goal
-
-A fully working **AI-powered career assistant system** that simulates:
-
-> “A recruiter + career coach + technical interviewer in one system”
 
