@@ -11,7 +11,7 @@ class InterviewSchema(BaseModel):
     )
 
     behavioral_questions: List[str] = Field(
-        default_factory=List,
+        default_factory=list,
         description="List of possible behavioral and situational interview questions"
     )
 
