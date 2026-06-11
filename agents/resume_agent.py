@@ -5,6 +5,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from services.llm_service import get_llm_model
 from prompts.resume_prompt import RESUME_PROMPT
 from schemas.resume_schema import ResumeSchema
+from utils.llm_retry import safe_llm_call
 
 class ResumeAgent:
     """ResumeAgent is responsible for converting raw resume text into a structured ResumeSchema using an LLM.
@@ -27,7 +28,7 @@ class ResumeAgent:
         )
 
         # Call LLM
-        response = self.llm.invoke(prompt)
+        response = safe_llm_call(lambda: self.llm.invoke(prompt))
 
         # Parse LLM output into structured Pydantic object
         result = self.parser.parse(response.content)
