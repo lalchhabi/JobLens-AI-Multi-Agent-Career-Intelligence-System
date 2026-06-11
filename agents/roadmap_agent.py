@@ -7,6 +7,7 @@ from schemas.gap_schema import GapSchema
 from schemas.job_schema import JobSchema
 from prompts.roadmap_prompt import ROADMAP_PROMPT
 from services.llm_service import get_llm_model
+from utils.llm_retry import safe_llm_call
 
 
 class RoadmapAgent():
@@ -58,7 +59,7 @@ class RoadmapAgent():
         )
 
         # Call the model and generate the response
-        response = self.llm.invoke(prompt)
+        response = safe_llm_call(lambda: self.llm.invoke(prompt))
 
         # Convert the raw result into structured output
         result = self.parser.parse(response.content)

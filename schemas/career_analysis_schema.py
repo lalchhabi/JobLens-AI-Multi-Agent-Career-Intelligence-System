@@ -18,8 +18,11 @@ class InterviewQuestions(BaseModel):
     difficulty_level: str
 
 class CareerAnalysisSchema(BaseModel):
-    resume_analysis: Dict[str, Any]
-    job_analysis: Dict[str, Any]
-    gap_analysis: Dict[str, Any]
-    interview_analysis: InterviewQuestions   
-    learning_roadmap: Dict[str, Any]
+    """
+    Aggregated output of the JobLens multi-agent career analysis pipeline.
+    """
+    resume_analysis: ResumeSchema
+    job_analysis: JobSchema
+    gap_analysis: GapSchema
+    interview_analysis: InterviewSchema
+    learning_roadmap: RoadmapSchema

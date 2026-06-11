@@ -5,6 +5,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from prompts.gap_prompt import GAP_PROMPT
 from schemas.gap_schema import GapSchema
 from services.llm_service import get_llm_model
+from utils.llm_retry import safe_llm_call
 
 
 # Gap Analysis Agent
@@ -48,7 +49,7 @@ class GapAnalysisAgent:
             )
         
         # Call LLM 
-        response = self.llm.invoke(prompt)
+        response = safe_llm_call(lambda: self.llm.invoke(prompt))
 
         # Parse and validate structured output
         result = self.parser.parse(response.content)

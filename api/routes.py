@@ -9,6 +9,7 @@ import uuid
 from utils.validators import validate_pdf, validate_job_description
 from utils.logger import get_logger
 from schemas.career_response_schema import CareerResponse
+from utils.save_results import save_analysis
 
 # Initialize module-level logger
 logger = get_logger(__name__)
@@ -42,6 +43,7 @@ async def analyze_career(
     # Save file
     resume_path = os.path.join(UPLOAD_DIR, f"{uuid.uuid4()}.pdf")
 
+    resume.file.seek(0)
     with open(resume_path, "wb") as buffer:
         shutil.copyfileobj(resume.file, buffer)
 
@@ -54,8 +56,10 @@ async def analyze_career(
 
         )
         logger.info("Career analysis completed successfully")
+        save_path = save_analysis(result.model_dump())
         return result.model_dump()
 
     except Exception as e:
+        logger.exception("Career Analysis Failed")
         raise HTTPException(status_code=500, detail=str(e))
 
