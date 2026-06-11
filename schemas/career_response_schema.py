@@ -1,6 +1,5 @@
 # Import libraries
 from pydantic import BaseModel, Field
-from typing import Dict, Any, List
 
 # Import project files
 from schemas.resume_schema import ResumeSchema
