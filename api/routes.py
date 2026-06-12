@@ -1,27 +1,42 @@
 # Import libraries
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Request
 from services.career_analysis_service import CareerAnalysisService
-import os
-import shutil
-import uuid
+import os, shutil, uuid
+from fastapi.templating import Jinja2Templates
+from pathlib import Path
 
 # Import project files
 from utils.validators import validate_pdf, validate_job_description
 from utils.logger import get_logger
 from schemas.career_response_schema import CareerResponse
 from utils.save_results import save_analysis
+from fastapi.templating import Jinja2Templates
 
 # Initialize module-level logger
 logger = get_logger(__name__)
 
+templates = Jinja2Templates(directory="ui/templates")
+
+
 # Define routes
 router = APIRouter()
 service = CareerAnalysisService()
+# Load templates file
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
 
 # Docs upload directory path
 UPLOAD_DIR = 'uploads'
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+@router.get("/")
+def home(request: Request):
+    return templates.TemplateResponse(
+       "index.html",
+       {'request': request}
+    )
+        
 @router.post("/analyze", response_model=CareerResponse)
 async def analyze_career(
     resume: UploadFile = File(...),
@@ -62,4 +77,3 @@ async def analyze_career(
     except Exception as e:
         logger.exception("Career Analysis Failed")
         raise HTTPException(status_code=500, detail=str(e))
-
