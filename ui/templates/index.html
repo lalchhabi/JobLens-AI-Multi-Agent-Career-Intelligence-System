@@ -6,25 +6,72 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>🧠 JobLens AI</h1>
-        <p>Upload your resume & job description to analyze career fit</p>
 
-        <form id="uploadForm">
-            <label>Upload Resume (PDF)</label>
-            <input type="file" id="resume" />
+<div class="app">
 
-            <label>Job Description</label>
-            <textarea id="jobDescription" placeholder="Paste job description..."></textarea>
+    <!-- SIDEBAR (NOTION STYLE) -->
+    <aside class="sidebar">
+        <h2>🧠 JobLens AI</h2>
 
-            <button type="submit">Analyze</button>
-        </form>
+    </aside>
 
-        <pre id="result"></pre>
-    </div>
+    <!-- MAIN AREA -->
+    <main class="main">
 
-    <script src="/static/script.js"></script>
+        <!-- HEADER -->
+        <div class="header">
+            <h1>AI Career Intelligence Engine</h1>
+        </div>
+
+        <!-- INPUT SECTION -->
+        <div class="input-section">
+
+            <!-- Resume -->
+            <div class="card input-card">
+                <div class="card-header">
+                    <h3>📄 Resume (.PDF)</h3>
+                </div>
+
+                <label class="upload-btn">
+                    <input type="file" id="resume" hidden>
+                    <div class="upload-content">
+                        <div>
+                            <strong>Click to upload</strong>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Job Description -->
+            <div class="card input-card">
+                <div class="card-header">
+                    <h3>💼 Job Description</h3>
+                </div>
+
+                <textarea id="jobDescription"
+                    placeholder="Paste job description here..."></textarea>
+            </div>
+
+        </div>
+
+        <!-- ACTION BUTTON -->
+        <div class="action">
+            <button id="analyzeBtn" class="primary-btn">
+                🚀 Analyze Career Fit
+            </button>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="result" class="result">
+            <div class="empty-state">
+                Results will appear here after analysis
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<script src="/static/script.js"></script>
 </body>
-</html> 
-
-
+</html>
