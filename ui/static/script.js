@@ -1,19 +1,46 @@
-document.getElementById("uploadForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
 
-    let resume = document.getElementById("resume").files[0];
-    let job = document.getElementById("jobDescription").value;
+    const btn = document.getElementById("analyzeBtn");
 
-    let formData = new FormData();
-    formData.append("resume", resume);
-    formData.append("job_description", job);
+    const resumeInput = document.getElementById("resume");
+    const jobInput = document.getElementById("jobDescription");
+    const resultBox = document.getElementById("result");
 
-    let response = await fetch("/analyze", {
-        method: "POST",
-        body: formData
+    if (!btn) {
+        console.error("Analyze button not found in DOM");
+        return;
+    }
+
+    btn.addEventListener("click", async function () {
+
+        const resume = resumeInput.files[0];
+        const job = jobInput.value;
+
+        if (!resume || !job) {
+            alert("Please upload resume and enter job description");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("resume", resume);
+        formData.append("job_description", job);
+
+        resultBox.innerText = "Analyzing...";
+
+        try {
+            let response = await fetch("/analyze", {
+                method: "POST",
+                body: formData
+            });
+
+            let data = await response.json();
+
+            resultBox.innerText = JSON.stringify(data, null, 2);
+
+        } catch (err) {
+            console.error(err);
+            resultBox.innerText = "Error occurred while analyzing";
+        }
     });
 
-    let data = await response.json();
-    document.getElementById("result").innerText =
-        JSON.stringify(data, null, 2);
 });
