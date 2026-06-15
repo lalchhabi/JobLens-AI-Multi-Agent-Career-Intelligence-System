@@ -246,8 +246,8 @@ ai-career-copilot/
 ## 1. Clone Repository
 
 ```bash
-git clone https://github.com/your-username/ai-career-copilot.git
-cd ai-career-copilot
+git clone https://github.com/lalchhabi/JobLens-AI-Multi-Agent-Career-Intelligence-System
+cd JobLens-AI-Multi-Agent-Career-Intelligence-System
 ```
 
 ---
