@@ -9,6 +9,8 @@ from agents.roadmap_agent import RoadmapAgent
 
 from schemas.career_analysis_schema import CareerAnalysisSchema
 from utils.logger import get_logger
+from graph.workflow import career_graph
+
 
 # Initialize module-level logger
 logger = get_logger(__name__)
@@ -79,13 +81,20 @@ class CareerAnalysisService():
             )
             logger.info("Career analysis pipeline completed")
 
+            result = career_graph.invoke(
+                {
+                    "resume_path": resume_path,
+                    "job_description": job_description,
+                }
+            )
+
             # Step 6: Combine Results
             return CareerAnalysisSchema(
-                resume_analysis=resume_data,
-                job_analysis=job_data,
-                gap_analysis=gap_data,
-                interview_analysis=interview_data,
-                learning_roadmap=roadmap_data
+                resume_analysis=result["resume_analysis"],
+                job_analysis=result["job_analysis"],
+                gap_analysis=result["gap_analysis"],
+                interview_analysis=result["interview_analysis"],
+                learning_roadmap=result["learning_roadmap"],
             )
         except Exception as e:
             logger.error(f"Career analysis failed: {str(e)}")
