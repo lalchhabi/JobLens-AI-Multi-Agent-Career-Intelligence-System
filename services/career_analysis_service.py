@@ -24,17 +24,6 @@ class CareerAnalysisService():
     This is the core business logic layer of the system.
     """
 
-    def __init__(self):
-        # Tools
-        self.parser = PDFparser()
-
-        #Agents
-        self.resume_agent = ResumeAgent()
-        self.job_agent = JobAgent()
-        self.gap_agent = GapAnalysisAgent()
-        self.interview_agent = InterviewAgent()
-        self.roadmap_agent = RoadmapAgent()
-
     def career_analyze(self,
                        resume_path: str,
                        job_description: str
@@ -49,37 +38,7 @@ class CareerAnalysisService():
             CareerAnalysisSchema: Complete AI analysis result
         """
         try:
-            # Step 1: Extract text
-            logger.info("Extracting resume text")
-            raw_resume = self.parser.extract_text(resume_path)
-            raw_job = job_description
-
-            # Step 2: Structured Parsing
-            logger.info("Running Resume Agent")
-            resume_data = self.resume_agent.parse_resume(raw_resume)
-            logger.info("Running Job Analysis Agent")
-            job_data = self.job_agent.analyze_job(raw_job)
-
-            # Step 3: Gap Analysis
-            logger.info("Running Gap Analysis Agent")
-            gap_data = self.gap_agent.gap_analyze(resume_data, job_data)
-
-            # Step 4: Interview Questions
-            logger.info("Running Interview Agent")
-            interview_data = self.interview_agent.generate_interview_questions(
-                project_info=resume_data,
-                job_description=job_data,
-                learning_recommend=gap_data,
-                difficult_level='medium'
-            )
-
-            # Step 5: Roadmap Generation
-            logger.info("Running Learning Roadmap Agent")
-            roadmap_data = self.roadmap_agent.generate_roadmap(
-                gap_data=gap_data,
-                job_data=job_data
-            )
-            logger.info("Career analysis pipeline completed")
+            logger.info("Running LangGraph workflow")
 
             result = career_graph.invoke(
                 {
@@ -88,7 +47,8 @@ class CareerAnalysisService():
                 }
             )
 
-            # Step 6: Combine Results
+            logger.info("Career analysis pipeline completed")
+
             return CareerAnalysisSchema(
                 resume_analysis=result["resume_analysis"],
                 job_analysis=result["job_analysis"],
@@ -96,6 +56,7 @@ class CareerAnalysisService():
                 interview_analysis=result["interview_analysis"],
                 learning_roadmap=result["learning_roadmap"],
             )
+        
         except Exception as e:
-            logger.error(f"Career analysis failed: {str(e)}")
-            raise 
+            logger.error(f"Career Analysis failed: {str(e)}")
+            raise
