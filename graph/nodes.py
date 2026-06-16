@@ -1,23 +1,32 @@
 # Import project files 
-from services.career_analysis_service import CareerAnalysisService
+from tools.pdf_parser import PDFparser
 
-service = CareerAnalysisService()
+from agents.resume_agent import ResumeAgent
+from agents.job_agent import JobAgent
+from agents.gap_agent import GapAnalysisAgent
+from agents.interview_agent import InterviewAgent
+from agents.roadmap_agent import RoadmapAgent
 
+resume_agent = ResumeAgent()
+job_agent = JobAgent()
+gap_agent = GapAnalysisAgent()
+interview_agent = InterviewAgent()
+roadmap_agent = RoadmapAgent()
+
+parser = PDFparser()
 
 # Functions for the graph nodes
 def parser_node(state):
-    raw_resume = service.parser.extract_text(
-        state["resume_path"]
-    )
-
+    raw_resume = parser.extract_text(state["resume_path"])
+    
     return {
         "raw_resume": raw_resume,
-        "raw_job": state["job_description"]
+        "raw_job": state['job_description']
     }
 
 
 def resume_node(state):
-    result = service.resume_agent.parse_resume(
+    result = resume_agent.parse_resume(
         state["raw_resume"]
     )
 
@@ -26,8 +35,8 @@ def resume_node(state):
     }
 
 def job_node(state):
-    result = service.job_agent.analyze_job(
-        state["raw_job"]
+    result = job_agent.analyze_job(
+        state["job_description"]
     )
 
     return {
@@ -36,7 +45,7 @@ def job_node(state):
 
 
 def gap_node(state):
-    result = service.gap_agent.gap_analyze(
+    result = gap_agent.gap_analyze(
         state["resume_analysis"],
         state["job_analysis"]
     )
@@ -46,7 +55,7 @@ def gap_node(state):
     }
 
 def interview_node(state):
-    result = service.interview_agent.generate_interview_questions(
+    result = interview_agent.generate_interview_questions(
         project_info=state["resume_analysis"],
         job_description=state["job_analysis"],
         learning_recommend=state["gap_analysis"],
@@ -59,7 +68,7 @@ def interview_node(state):
 
 
 def roadmap_node(state):
-    result = service.roadmap_agent.generate_roadmap(
+    result = roadmap_agent.generate_roadmap(
         gap_data=state["gap_analysis"],
         job_data=state["job_analysis"]
     )
