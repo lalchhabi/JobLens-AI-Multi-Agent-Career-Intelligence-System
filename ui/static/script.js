@@ -1,37 +1,35 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const analyzeBtn = document.getElementById("analyzeBtn");
-    const resultBox = document.getElementById("result");
+document.addEventListener("DOMContentLoaded", function () {
 
-    if (!analyzeBtn) {
-        console.error("Analyze button not found in DOM");
-        return;
-    }
+    const btn = document.getElementById("analyzeBtn");
+    const resumeInput = document.getElementById("resume");
+    const jobInput = document.getElementById("jobDescription");
+    const resultDiv = document.getElementById("result");
 
-    analyzeBtn.addEventListener("click", async () => {
-        const resume = document.getElementById("resume").files[0];
-        const jobDescription = document.getElementById("jobDescription").value;
+    btn.addEventListener("click", async function () {
 
-        if (!resume || !jobDescription) {
-            alert("Please upload resume and paste job description");
+        // Validation
+        if (!resumeInput.files[0]) {
+            alert("Please upload resume");
             return;
         }
 
-        // Show loading state
-        resultBox.innerHTML = `<div class="empty-state">⏳ Analyzing your profile...</div>`;
+        if (!jobInput.value.trim()) {
+            alert("Please enter job description");
+            return;
+        }
+
+        // Show loading
+        resultDiv.innerHTML = "<p>⏳ Analyzing your profile...</p>";
 
         try {
             const formData = new FormData();
-            formData.append("resume", resume);
-            formData.append("job_description", jobDescription);
+            formData.append("resume", resumeInput.files[0]);
+            formData.append("job_description", jobInput.value);
 
             const response = await fetch("/analyze", {
                 method: "POST",
                 body: formData
             });
-
-            if (!response.ok) {
-                throw new Error("Server error while analyzing data");
-            }
 
             const data = await response.json();
 
@@ -39,80 +37,113 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             console.error(error);
-            resultBox.innerHTML = `
-                <div class="error-box">
-                    ❌ Something went wrong while analyzing.
-                </div>
-            `;
+            resultDiv.innerHTML = "<p style='color:red'>Error occurred during analysis</p>";
         }
     });
 
     function renderResults(data) {
-        const gap = data.gap_analysis || {};
-        const resume = data.resume_analysis || {};
-        const interview = data.interview_analysis || {};
-        const roadmap = data.learning_roadmap || {};
 
-        resultBox.innerHTML = `
-            <div class="dashboard">
+        resultDiv.innerHTML = `
+            <div class="result-container">
 
-                <!-- MATCH SCORE -->
-                <div class="card score-card">
-                    <h2>🎯 Match Score</h2>
-                    <div class="score">${gap.match_score || 0}%</div>
-                    <div class="bar">
-                        <div class="fill" style="width:${gap.match_score || 0}%"></div>
-                    </div>
-                </div>
-
-                <!-- RESUME INFO -->
-                <div class="card">
-                    <h3>👤 Candidate Info</h3>
-                    <p><strong>Name:</strong> ${resume.name || "N/A"}</p>
-                    <p><strong>Email:</strong> ${resume.email || "N/A"}</p>
-                </div>
-
-                <!-- STRONG SKILLS -->
-                <div class="card">
-                    <h3>💪 Strong Skills</h3>
-                    <div class="tags">
-                        ${(gap.strong_skills || []).map(skill =>
-                            `<span class="tag good">${skill}</span>`
-                        ).join("")}
-                    </div>
-                </div>
-
-                <!-- MISSING SKILLS -->
-                <div class="card">
-                    <h3>⚠️ Skill Gaps</h3>
-                    <div class="tags">
-                        ${(gap.missing_skills || []).map(skill =>
-                            `<span class="tag bad">${skill}</span>`
-                        ).join("")}
-                    </div>
-                </div>
-
-                <!-- INTERVIEW QUESTIONS -->
-                <div class="card">
-                    <h3>🧪 Technical Interview Questions</h3>
-                    <ol>
-                        ${(interview.technical_questions || []).map(q =>
-                            `<li>${q}</li>`
-                        ).join("")}
-                    </ol>
-                </div>
-
-                <!-- LEARNING ROADMAP -->
-                <div class="card">
-                    <h3>🗺 First Week Learning Plan</h3>
-                    <ul>
-                        ${(roadmap.first_week || []).map(day =>
-                            `<li>${day}</li>`
-                        ).join("")}
-                    </ul>
-                </div>
+                ${renderResume(data.resume_analysis)}
+                ${renderGap(data.gap_analysis)}
+                ${renderInterview(data.interview_analysis)}
+                ${renderRoadmap(data.learning_roadmap)}
 
             </div>
         `;
     }
+
+    function renderResume(resume) {
+        return `
+        <div class="card">
+            <h2>📄 Resume Analysis</h2>
+            <p><strong>Name:</strong> ${resume.name}</p>
+            <p><strong>Email:</strong> ${resume.email}</p>
+
+            <h4>Skills</h4>
+            <div class="tags">
+                ${resume.skills.map(skill => `<span class="tag">${skill}</span>`).join("")}
+            </div>
+        </div>
+        `;
+    }
+
+    function renderGap(gap) {
+        return `
+        <div class="card">
+            <h2>📊 Gap Analysis</h2>
+
+            <div class="score-box">
+                <h3>Match Score: ${gap.match_score}%</h3>
+                <div class="progress">
+                    <div class="bar" style="width:${gap.match_score}%"></div>
+                </div>
+            </div>
+
+            <h4>Strong Skills</h4>
+            <div class="tags green">
+                ${gap.strong_skills.map(s => `<span class="tag">${s}</span>`).join("")}
+            </div>
+
+            <h4>Missing Skills</h4>
+            <div class="tags red">
+                ${gap.missing_skills.map(s => `<span class="tag">${s}</span>`).join("")}
+            </div>
+
+            <h4>Recommendations</h4>
+            <ul>
+                ${gap.learning_recommendation.map(r => `<li>${r}</li>`).join("")}
+            </ul>
+        </div>
+        `;
+    }
+
+    function renderInterview(interview) {
+        return `
+        <div class="card">
+            <h2>🎯 Interview Questions</h2>
+
+            <h4>Technical</h4>
+            <ul>
+                ${interview.technical_questions.map(q => `<li>${q}</li>`).join("")}
+            </ul>
+
+            <h4>Behavioral</h4>
+            <ul>
+                ${interview.behavioral_questions.map(q => `<li>${q}</li>`).join("")}
+            </ul>
+
+            <h4>Project Based</h4>
+            <ul>
+                ${interview.project_based_questions.map(q => `<li>${q}</li>`).join("")}
+            </ul>
+        </div>
+        `;
+    }
+
+    function renderRoadmap(roadmap) {
+        return `
+        <div class="card">
+            <h2>📚 Learning Roadmap</h2>
+
+            <h4>Week 1</h4>
+            <ul>
+                ${roadmap.first_week.map(d => `<li>${d}</li>`).join("")}
+            </ul>
+
+            <h4>Week 2</h4>
+            <ul>
+                ${roadmap.second_week.map(d => `<li>${d}</li>`).join("")}
+            </ul>
+
+            <h4>Projects</h4>
+            <ul>
+                ${roadmap.projects.map(p => `<li>${p}</li>`).join("")}
+            </ul>
+        </div>
+        `;
+    }
+
 });
