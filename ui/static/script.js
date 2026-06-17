@@ -5,20 +5,63 @@ document.addEventListener("DOMContentLoaded", function () {
     const jobInput = document.getElementById("jobDescription");
     const resultDiv = document.getElementById("result");
 
+    // =============================
+    // UI HELPERS (NEW)
+    // =============================
+
+    function showToast(message, color = "#333") {
+        const toast = document.createElement("div");
+
+        toast.innerText = message;
+        toast.style.position = "fixed";
+        toast.style.bottom = "20px";
+        toast.style.right = "20px";
+        toast.style.background = color;
+        toast.style.color = "white";
+        toast.style.padding = "10px 15px";
+        toast.style.borderRadius = "8px";
+        toast.style.zIndex = 9999;
+        toast.style.fontSize = "14px";
+        toast.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 2500);
+    }
+
+    function setLoading(isLoading) {
+        if (isLoading) {
+            btn.innerText = "⏳ Analyzing...";
+            btn.disabled = true;
+            btn.style.opacity = "0.7";
+        } else {
+            btn.innerText = "🚀 Analyze Career Fit";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        }
+    }
+
+    // =============================
+    // EVENT LISTENERS
+    // =============================
+
     btn.addEventListener("click", async function () {
 
         // Validation
         if (!resumeInput.files[0]) {
-            alert("Please upload resume");
+            showToast("Please upload resume", "#e74c3c");
             return;
         }
 
         if (!jobInput.value.trim()) {
-            alert("Please enter job description");
+            showToast("Please enter job description", "#e74c3c");
             return;
         }
 
-        // Show loading
+        // Loading state
+        setLoading(true);
         resultDiv.innerHTML = "<p>⏳ Analyzing your profile...</p>";
 
         try {
@@ -33,13 +76,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data = await response.json();
 
+            showToast("Analysis completed successfully ✔", "#2ecc71");
+
             renderResults(data);
 
         } catch (error) {
             console.error(error);
+            showToast("Analysis failed ❌", "#e74c3c");
             resultDiv.innerHTML = "<p style='color:red'>Error occurred during analysis</p>";
         }
+
+        setLoading(false);
     });
+
+    // =============================
+    // FILE UPLOAD NOTIFICATION (NEW)
+    // =============================
+    resumeInput.addEventListener("change", function () {
+        if (this.files.length > 0) {
+            showToast(`Resume uploaded: ${this.files[0].name}`, "#2ecc71");
+        }
+    });
+
+    jobInput.addEventListener("input", function () {
+        if (jobInput.value.trim().length > 20) {
+            showToast("Job description added ✔", "#2ecc71");
+        }
+    });
+
+    // =============================
+    // RESULT RENDERING (YOUR EXISTING LOGIC - IMPROVED ONLY SLIGHTLY)
+    // =============================
 
     function renderResults(data) {
 
