@@ -60,3 +60,39 @@ class CareerAnalysisService():
         except Exception as e:
             logger.error(f"Career Analysis failed: {str(e)}")
             raise
+
+
+
+    def career_analyze_stream(
+        self, 
+        resume_path: str, 
+        job_description: str
+        ):
+        """Execute the JobLens AI workflow using LangGraph streaming.
+        Instead of waiting for the entire workflow to complete,
+        this method yields intermediate node outputs as they
+        become available.
+
+        Args:
+            resume_path (str):
+                Path to the uploaded resume file.
+
+            job_description (str):
+                Raw job description text provided by the user.
+        """
+        try:
+            logger.info("Starting LangGraph streaming workflow")
+
+            for event in career_graph.stream(
+                {
+                    "resume_path": resume_path,
+                    "job_description": job_description,
+                }
+            ):
+                yield event
+
+            logger.info("Streaming workflow completed")
+
+        except Exception as e:
+            logger.error(f"Streaming workflow failed: {str(e)}")
+            raise
