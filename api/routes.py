@@ -1,10 +1,10 @@
 # Import libraries
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Request
 from services.career_analysis_service import CareerAnalysisService
-import os, shutil, uuid
+import os, shutil, uuid, json
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
-
+from fastapi.responses import StreamingResponse
 # Import project files
 from utils.validators import validate_pdf, validate_job_description
 from utils.logger import get_logger
@@ -77,3 +77,38 @@ async def analyze_career(
     except Exception as e:
         logger.exception("Career Analysis Failed")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/analyze_stream")
+def analyze_stream(
+    resume: UploadFile = File(...),
+    job_description: str = Form(...)
+    ):
+    """Execute the JobLens AI workflow using LangGraph streaming.
+
+    Instead of waiting for the entire workflow to complete,
+    this method yields intermediate node outputs as they
+    become available.
+
+    Workflow:
+        Parser -> Resume Analysis -> Job Analysis ->
+        Gap Analysis -> Interview Questions ->
+        Learning Roadmap
+
+    Args:
+        resume_path (str):
+            Path to the uploaded resume file.
+
+        job_description (str):
+            Raw job description text provided by the user.
+            """
+    def event_generator():
+        # save file temporarily
+        file_path = save_temp_file(resume)
+
+        for event in service.career_analyze_stream(file_path, job_description):
+
+            # convert to SSE format
+            yield f"data: {json.dumps(event)}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
