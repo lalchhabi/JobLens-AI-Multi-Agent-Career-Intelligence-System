@@ -2,6 +2,10 @@
 # 📌 JobLens-AI-Multi-Agent-Career-Intelligence-System
 
 ### Multi-Agent Job Search & Career Optimization System
+JobLens AI is a LangGraph-powered multi-agent career intelligence system that helps job seekers evaluate their resumes against job descriptions. The system orchestrates specialized AI agents to perform resume analysis, job understanding, skill gap identification, interview preparation, and personalized learning roadmap generation.
+
+Built with FastAPI, LangChain, LangGraph, and Large Language Models, JobLens AI demonstrates how agent workflows can be structured into production-ready AI applications.
+
 
 An **agentic AI system** that helps users:
 
@@ -82,6 +86,27 @@ This system acts as a **personal AI career coach + recruiter assistant**:
         │ (Roadmap + Q/A + Fit) │
         └───────────────────────┘
 ```
+# LangGraph Workflow
+
+JobLens AI uses LangGraph to orchestrate the complete career intelligence pipeline.
+
+Resume PDF
+↓
+Parser Node
+↓
+Resume Analysis Agent
+↓
+Job Analysis Agent
+↓
+Gap Analysis Agent
+↓
+Interview Preparation Agent
+↓
+Learning Roadmap Agent
+↓
+Structured Career Intelligence Report
+
+Each node focuses on a specialized task while LangGraph manages the execution flow and state transitions between agents.
 
 ---
 
@@ -184,7 +209,8 @@ Generates:
 
 ## AI / Agents
 
-* LangChain OR LangGraph (preferred)
+* LangChain
+* LangGraph
 * OpenAI / Groq / Gemini API
 
 ## Document Processing
