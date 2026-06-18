@@ -79,36 +79,64 @@ async def analyze_career(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/analyze_stream")
+@router.post("/analyze-stream")
 def analyze_stream(
     resume: UploadFile = File(...),
     job_description: str = Form(...)
-    ):
-    """Execute the JobLens AI workflow using LangGraph streaming.
-
-    Instead of waiting for the entire workflow to complete,
-    this method yields intermediate node outputs as they
-    become available.
-
-    Workflow:
-        Parser -> Resume Analysis -> Job Analysis ->
-        Gap Analysis -> Interview Questions ->
-        Learning Roadmap
+):
+    """Analyze resume and job description and generate the outputs in streaming response or stream LangGraph node outputs to frontend using Server-Sent Events(SSE).
 
     Args:
-        resume_path (str):
-            Path to the uploaded resume file.
+        resume (UploadFile, optional): Resume in pfg
+        job_description (str, optional): job description
 
-        job_description (str):
-            Raw job description text provided by the user.
-            """
+    Returns:
+        StreamingResponse:
+            Emits each completed node result immediately
+            so frontend can update UI in real time.
+    """
+    logger.info("Received streaming career analysis request")
+
+    # Validation
+    resume = validate_pdf(resume)
+    job_description = validate_job_description(job_description)
+
+    logger.info(f"Resume uploaded: {resume.filename}")
+
+    # Save uploaded file
+    resume_path = os.path.join(
+        UPLOAD_DIR,
+        f"{uuid.uuid4()}.pdf"
+    )
+
+    resume.file.seek(0)
+
+    with open(resume_path, "wb") as buffer:
+        shutil.copyfileobj(resume.file, buffer)
+
     def event_generator():
-        # save file temporarily
-        file_path = save_temp_file(resume)
+        try:
 
-        for event in service.career_analyze_stream(file_path, job_description):
+            logger.info("Starting LangGraph streaming workflow")
 
-            # convert to SSE format
-            yield f"data: {json.dumps(event)}\n\n"
+            for event in service.career_analyze_stream(
+                resume_path=resume_path,
+                job_description=job_description
+            ):
 
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
+                logger.info(f"Streaming node result: {list(event.keys())[0]}")
+
+                yield f"data: {json.dumps(event, default=str)}\n\n"
+
+            logger.info("Streaming workflow completed")
+
+        except Exception as e:
+
+            logger.exception("Streaming workflow failed")
+
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream"
+    )

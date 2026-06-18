@@ -83,13 +83,21 @@ class CareerAnalysisService():
         try:
             logger.info("Starting LangGraph streaming workflow")
 
-            for event in career_graph.stream(
-                {
-                    "resume_path": resume_path,
-                    "job_description": job_description,
-                }
-            ):
-                yield event
+            for event in career_graph.stream({
+                "resume_path": resume_path,
+                "job_description": job_description,
+            }):
+
+                # NORMALIZE EVENT FORMAT
+                if isinstance(event, dict):
+                    # extract node output safely
+                    for key, value in event.items():
+
+                        # skip internal langgraph metadata
+                        if key in ["event", "metadata"]:
+                            continue
+
+                        yield {key: value}
 
             logger.info("Streaming workflow completed")
 
