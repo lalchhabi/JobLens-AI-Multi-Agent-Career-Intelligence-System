@@ -69,16 +69,78 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append("resume", resumeInput.files[0]);
             formData.append("job_description", jobInput.value);
 
-            const response = await fetch("/analyze", {
+            const response = await fetch("/analyze-stream", {
                 method: "POST",
                 body: formData
             });
 
-            const data = await response.json();
+            // STREAM READER
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
 
+            let buffer = "";
+
+            // hold partial results
+            let partialData = {
+                resume_analysis: null,
+                gap_analysis: null,
+                interview_analysis: null,
+                learning_roadmap: null
+            };
+
+            resultDiv.innerHTML = "<p>⏳ Starting streaming analysis...</p>";
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+
+                const chunks = buffer.split("\n\n");
+                buffer = chunks.pop(); // keep incomplete chunk
+
+                for (const chunk of chunks) {
+                    if (!chunk.startsWith("data: ")) continue;
+
+                    const jsonStr = chunk.replace("data: ", "");
+                    const event = JSON.parse(jsonStr);
+
+                    console.log("Stream event:", event);
+
+                    // detect which node finished
+                    const key = Object.keys(event)[0];
+                    partialData[key] = event[key];
+
+                    // show toast per step
+                    showToast(`${key} completed ✔`, "#3498db");
+
+                    // live UI update
+                    resultDiv.innerHTML = `
+                        <div class="result-container">
+
+                            ${partialData.resume_analysis 
+                                ? renderResume(partialData.resume_analysis) 
+                                : "<p>⏳ Resume analysis running...</p>"}
+
+                            ${partialData.gap_analysis 
+                                ? renderGap(partialData.gap_analysis) 
+                                : "<p>⏳ Gap analysis running...</p>"}
+
+                            ${partialData.interview_analysis 
+                                ? renderInterview(partialData.interview_analysis) 
+                                : "<p>⏳ Interview questions generating...</p>"}
+
+                            ${partialData.learning_roadmap 
+                                ? renderRoadmap(partialData.learning_roadmap) 
+                                : "<p>⏳ Roadmap generating...</p>"}
+
+                        </div>
+                    `;
+                }
+            }
+
+            // final toast when stream ends
             showToast("Analysis completed successfully ✔", "#2ecc71");
-
-            renderResults(data);
 
         } catch (error) {
             console.error(error);
