@@ -51,7 +51,7 @@ def gap_node(state):
     )
 
     return {
-        "gap_analysis": result
+        "gap_analysis": result 
     }
 
 def interview_node(state):
