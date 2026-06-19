@@ -133,8 +133,13 @@ def analyze_stream(
         except Exception as e:
 
             logger.exception("Streaming workflow failed")
+            print("Sending error to frontend")
+            error_message = (
+                "AI service is currently busy (rate limit reached)." 
+                "Please try again after a few minutes."
+            )
 
-            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+            yield f"data: {json.dumps({'error': error_message})}\n\n"
 
     return StreamingResponse(
         event_generator(),
