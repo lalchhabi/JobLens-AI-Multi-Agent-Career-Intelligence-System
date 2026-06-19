@@ -89,18 +89,34 @@ class CareerAnalysisService():
             }):
 
                 # NORMALIZE EVENT FORMAT
-                if isinstance(event, dict):
-                    # extract node output safely
-                    for key, value in event.items():
+                if not isinstance(event, dict):
+                    continue
 
-                        # skip internal langgraph metadata
-                        if key in ["event", "metadata"]:
-                            continue
+                # extract node output safely
+                for key, value in event.items():
 
-                        yield {key: value}
+                    # skip internal langgraph metadata
+                    if key in ["event", "metadata"]:
+                        continue
+
+                    logger.info(f"STREAM EVENT: {key}")
+
+                    yield {
+                        "type": key,
+                        "data": (
+                            value.model_dump()
+                            if hasattr(value, "model_dump")
+                            else value
+                        )
+                    }
 
             logger.info("Streaming workflow completed")
 
         except Exception as e:
             logger.error(f"Streaming workflow failed: {str(e)}")
-            raise
+
+            yield{
+                "type":"error",
+                "data":str(e)
+            }
+            
