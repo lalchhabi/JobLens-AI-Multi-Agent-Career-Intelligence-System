@@ -1,3 +1,4 @@
+console.log("🔥 STREAMING SCRIPT LOADED");
 document.addEventListener("DOMContentLoaded", function () {
 
     const btn = document.getElementById("analyzeBtn");
@@ -88,7 +89,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 learning_roadmap: null
             };
 
-            resultDiv.innerHTML = "<p>⏳ Starting streaming analysis...</p>";
+            resultDiv.innerHTML = `
+                <div id="streamContainer" class="result-container">
+                    <p>⏳ Starting streaming analysis...</p>
+                </div>
+            `;
+
+            const streamContainer = document.getElementById("streamContainer");
 
             while (true) {
                 const { value, done } = await reader.read();
@@ -104,37 +111,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     const jsonStr = chunk.replace("data: ", "");
                     const event = JSON.parse(jsonStr);
+                    console.log("EVENT RECEIVED:", event);
+                    if (event.error){
+                        showToast(event.error, "#e74c3c");
+                        resultDiv.innerHTML += `
+                            <div class="card">
+                                <h3>❌ AI service is busy right now.
+                                Please try again in a few minutes.
+                                </h3>
+                                <p>${event.error}</p>
+                            </div>
+                        `;
+
+                        setLoading(false);
+
+                        return;
+                    }
 
                     console.log("Stream event:", event);
 
                     // detect which node finished
-                    const key = Object.keys(event)[0];
-                    partialData[key] = event[key];
+                    if (event.type === "error") {
 
-                    // show toast per step
-                    showToast(`${key} completed ✔`, "#3498db");
+                        showToast(event.data, "#e74c3c");
+
+                        resultDiv.innerHTML += `
+                            <div class="card">
+                                <h3>❌ Analysis Failed</h3>
+                                <p>${event.data}</p>
+                            </div>
+                        `;
+
+                        setLoading(false);
+                        return;
+                    }
+
+                    partialData[event.type] = event.data;
+
+                    showToast(`${event.type} completed ✔`, "#3498db");
 
                     // live UI update
-                    resultDiv.innerHTML = `
-                        <div class="result-container">
+                    streamContainer.innerHTML = `
+                        ${partialData.resume_analysis 
+                            ? renderResume(partialData.resume_analysis) 
+                            : "<p>🧠 Resume analysis running...</p>"}
 
-                            ${partialData.resume_analysis 
-                                ? renderResume(partialData.resume_analysis) 
-                                : "<p>⏳ Resume analysis running...</p>"}
+                        ${partialData.gap_analysis 
+                            ? renderGap(partialData.gap_analysis) 
+                            : "<p>📊 Gap analysis running...</p>"}
 
-                            ${partialData.gap_analysis 
-                                ? renderGap(partialData.gap_analysis) 
-                                : "<p>⏳ Gap analysis running...</p>"}
+                        ${partialData.interview_analysis 
+                            ? renderInterview(partialData.interview_analysis) 
+                            : "<p>🎯 Interview questions generating...</p>"}
 
-                            ${partialData.interview_analysis 
-                                ? renderInterview(partialData.interview_analysis) 
-                                : "<p>⏳ Interview questions generating...</p>"}
-
-                            ${partialData.learning_roadmap 
-                                ? renderRoadmap(partialData.learning_roadmap) 
-                                : "<p>⏳ Roadmap generating...</p>"}
-
-                        </div>
+                        ${partialData.learning_roadmap 
+                            ? renderRoadmap(partialData.learning_roadmap) 
+                            : "<p>📚 Roadmap generating...</p>"}
                     `;
                 }
             }
