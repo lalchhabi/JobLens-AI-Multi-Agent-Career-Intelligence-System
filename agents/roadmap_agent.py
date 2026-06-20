@@ -1,5 +1,6 @@
 # Import libraries
 from langchain_core.output_parsers import PydanticOutputParser
+import json
 
 # Import project files
 from schemas.roadmap_schema import RoadmapSchema
@@ -53,8 +54,8 @@ class RoadmapAgent():
 
         # Finalize the prompt
         prompt = ROADMAP_PROMPT.format(
-            gap_analysis = gap_data.model_dump_json(indent=2),
-            job_requirements = job_data.model_dump_json(indent=2),
+            gap_analysis = json.dumps(gap_data, indent=2, default=str),
+            job_requirements = json.dumps(job_data, indent=2, default=str),
             format_instructions = self.parser.get_format_instructions()
         )
 
@@ -63,5 +64,8 @@ class RoadmapAgent():
 
         # Convert the raw result into structured output
         result = self.parser.parse(response.content)
+
+        print(type(gap_data))
+        print(type(job_data))
 
         return result

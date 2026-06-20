@@ -92,23 +92,28 @@ class CareerAnalysisService():
                 if not isinstance(event, dict):
                     continue
 
-                # extract node output safely
-                for key, value in event.items():
+                # LangGraph usually returns: {node_name: state_update}
+                for node_name, node_output in event.items():
 
-                    # skip internal langgraph metadata
-                    if key in ["event", "metadata"]:
+                    if not isinstance(node_output, dict):
                         continue
 
-                    logger.info(f"STREAM EVENT: {key}")
+                    # find actual meaningful key inside node output
+                    for key, value in node_output.items():
 
-                    yield {
-                        "type": key,
-                        "data": (
-                            value.model_dump()
-                            if hasattr(value, "model_dump")
-                            else value
-                        )
-                    }
+                        # skip internal langgraph metadata
+                        if key in ["event", "metadata"]:
+                            continue
+
+                        logger.info(f"STREAM EVENT: {key}")
+
+                        yield {
+                            "type": key,
+                            "data": 
+                                value.model_dump()
+                                if hasattr(value, "model_dump")
+                                else value
+                        }
 
             logger.info("Streaming workflow completed")
 

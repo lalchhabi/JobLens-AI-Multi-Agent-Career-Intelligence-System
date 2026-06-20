@@ -146,9 +146,22 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
 
-                    partialData[event.type] = event.data;
+                    const key = event.type;
+                    partialData[key] = event.data;
 
-                    showToast(`${event.type} completed ✔`, "#3498db");
+                    if (key) {
+                        partialData[key] = event.data;
+                    }
+
+                    const map = {
+                        resume: "Resume Analysis",
+                        job: "Job Analysis",
+                        gap: "Gap Analysis",
+                        interview: "Interview Questions",
+                        roadmap: "Learning Roadmap"
+                    };
+                    const uiKey = map[event.type];
+                    showToast(`${uiKey} completed ✔`, "#3498db");
 
                     // live UI update
                     streamContainer.innerHTML = `
@@ -157,11 +170,11 @@ document.addEventListener("DOMContentLoaded", function () {
                             : "<p>🧠 Resume analysis running...</p>"}
 
                         ${partialData.gap_analysis 
-                            ? renderGap(partialData.gap_analysis) 
+                            ? renderGap(partialData.gap_analysis)
                             : "<p>📊 Gap analysis running...</p>"}
 
                         ${partialData.interview_analysis 
-                            ? renderInterview(partialData.interview_analysis) 
+                            ? renderInterview(partialData.interview_analysis)
                             : "<p>🎯 Interview questions generating...</p>"}
 
                         ${partialData.learning_roadmap 
