@@ -1,5 +1,6 @@
 # Import libraries
 from langchain_core.output_parsers import PydanticOutputParser
+import json
 
 # Import project files
 from prompts.interview_prompt import INTERVIEW_PROMPT
@@ -65,13 +66,12 @@ class InterviewAgent:
 
         # Build final prompt
         prompt = INTERVIEW_PROMPT.format(
-            resume_projects = project_info.model_dump_json(indent=2),
-            job_description = job_description.model_dump_json(indent=2),
-            learning_recommendations = learning_recommend.model_dump_json(indent=2),
+            resume_projects = json.dumps(project_info, indent=2, default=str),
+            job_description = json.dumps(job_description, indent=2, default=str),
+            learning_recommendations = json.dumps(learning_recommend, indent=2, default=str),
             difficulty_level = difficult_level,
             format_instructions = self.parser.get_format_instructions()
         )
-
         # Call the LLM model to generate interview questions
         response = self.llm_model.invoke(prompt)
 
