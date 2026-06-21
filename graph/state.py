@@ -13,5 +13,7 @@ class CareerState(TypedDict):
     resume_analysis: dict
     job_analysis: dict
     gap_analysis: dict
+    market_jobs: dict
     interview_analysis: dict
     learning_roadmap: dict
+

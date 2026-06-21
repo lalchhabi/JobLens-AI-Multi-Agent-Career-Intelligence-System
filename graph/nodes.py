@@ -6,12 +6,14 @@ from agents.job_agent import JobAgent
 from agents.gap_agent import GapAnalysisAgent
 from agents.interview_agent import InterviewAgent
 from agents.roadmap_agent import RoadmapAgent
+from agents.market_agent import MarketAgent
 
 resume_agent = ResumeAgent()
 job_agent = JobAgent()
 gap_agent = GapAnalysisAgent()
 interview_agent = InterviewAgent()
 roadmap_agent = RoadmapAgent()
+market_agent = MarketAgent()
 
 parser = PDFparser()
 
@@ -69,4 +71,12 @@ def roadmap_node(state):
         "learning_roadmap":result.model_dump()
     }
 
+def market_node(state):
+    result = market_agent.analyze_market(
+        state['resume_analysis'],
+        state['job_analysis']
+    )
 
+    return {
+        "market_analysis":result.model_dump()
+    }
