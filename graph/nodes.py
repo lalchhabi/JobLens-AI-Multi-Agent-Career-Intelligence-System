@@ -73,8 +73,9 @@ def roadmap_node(state):
 
 def market_node(state):
     result = market_agent.analyze_market(
-        state['resume_analysis'],
-        state['job_analysis']
+        resume_analysis=state["resume_analysis"],
+        job_analysis=state["job_analysis"],
+        gap_analysis=state["gap_analysis"]
     )
 
     return {
