@@ -28,10 +28,14 @@ builder.add_edge("parser", "resume")
 builder.add_edge("resume", "job")
 builder.add_edge("job", "gap")
 builder.add_edge("gap", "interview")
+builder.add_edge("gap", "interview")
 builder.add_edge("gap", "market")
-builder.add_edge("interview", "roadmap")
-builder.add_edge("market", "roadmap")
+
+builder.add_edge("interview", END)
 builder.add_edge("roadmap", END)
+builder.add_edge("market", END)
 
 career_graph = builder.compile()
+
+
 

@@ -1,14 +1,31 @@
 #Import libraries
 from pydantic import BaseModel, Field
-from typing import Field, Literal, List
+from typing import List
+
+class JobRecommendation(BaseModel):
+    title: str
+    company: str
+    location: str
+    url: str
+
+
 
 # Define market job schema
-class RecommendedRole(BaseModel):
-    title: str = Field(descriptipn = "Recommended Job title")
-    match_score: str = Field(description = "Job Match Score")
-
-
 class MarketSchema(BaseModel):
-    recommended_roles: List[RecommendedRole] = Field(description = "Recommended Job Role")
-    trending_skills: List[str] = Field(default_factory = list, description = "Trending job skills")
-    career_advice: str = Field(description = "Career_advice")
+    similar_roles: List[str] = Field(
+        default_factory = list,
+        description = "Roles closely related to the target job")
+    
+    alternative_roles: List[str] = Field(
+        default_factory = list,
+        description = "Alternative career options matching candidate skills"
+    )
+    trending_skills: List[str] = Field(
+        default_factory = list,
+        description = "Most demanded skills across current job market"
+    )
+    recommended_jobs: List[JobRecommendation] = Field(
+        default_factory=list,
+        description="Real job recommendations collected from job search"
+    )
+    market_summary: str = Field(description = "Overall summary of market opportunities and hiring trends")
