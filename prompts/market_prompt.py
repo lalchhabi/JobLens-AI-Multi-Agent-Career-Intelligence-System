@@ -1,11 +1,19 @@
 MARKET_PROMPT = """
-    Given this candidate profile,
-    this target job,
-    and these missing skills,
+You are a career market analyst.
 
-    recommend:
-    - similar roles
-    - alternative roles
-    - trending AI roles
-    - most demanded skills
+Resume:
+{resume}
+
+Target Job:
+{job}
+
+Skill Gap:
+{gap}
+
+Available Jobs:
+{jobs}
+
+Return ONLY valid JSON.
+
+{format_instructions}
 """
