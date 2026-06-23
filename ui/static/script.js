@@ -86,7 +86,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 resume_analysis: null,
                 gap_analysis: null,
                 interview_analysis: null,
-                learning_roadmap: null
+                learning_roadmap: null,
+                market_analysis: null
             };
 
             resultDiv.innerHTML = `
@@ -112,6 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     const jsonStr = chunk.replace("data: ", "");
                     const event = JSON.parse(jsonStr);
                     console.log("EVENT RECEIVED:", event);
+                    console.log("TYPE =", event.type);
+                    console.log("DATA =", event.data);
                     if (event.error){
                         showToast(event.error, "#e74c3c");
                         resultDiv.innerHTML += `
@@ -158,7 +161,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         job: "Job Analysis",
                         gap: "Gap Analysis",
                         interview: "Interview Questions",
-                        roadmap: "Learning Roadmap"
+                        roadmap: "Learning Roadmap",
+                        market_analysis: "Market Insights"
                     };
                     const uiKey = map[event.type];
                     showToast(`${uiKey} completed ✔`, "#3498db");
@@ -180,6 +184,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         ${partialData.learning_roadmap 
                             ? renderRoadmap(partialData.learning_roadmap) 
                             : "<p>📚 Roadmap generating...</p>"}
+
+                        ${partialData.market_analysis 
+                            ? renderMarket(partialData.market_analysis) 
+                            : "<p>📚 Market Analysis running...</p>"}
                     `;
                 }
             }
@@ -318,6 +326,42 @@ document.addEventListener("DOMContentLoaded", function () {
             </ul>
         </div>
         `;
+    }
+
+    function renderMarket(market_analysis) {
+    if (!market_analysis) return "";
+
+    return `
+    <div class="card">
+        <h2>🌍 Market Insights</h2>
+
+        <h4>Similar Roles</h4>
+        <ul>
+            ${market_analysis.similar_roles.map(r => `<li>${r}</li>`).join("")}
+        </ul>
+
+        <h4>Alternative Roles</h4>
+        <ul>
+            ${market_analysis.alternative_roles.map(r => `<li>${r}</li>`).join("")}
+        </ul>
+
+        <h4>Trending Skills</h4>
+        <div class="tags">
+            ${market_analysis.trending_skills.map(s => `<span class="tag">${s}</span>`).join("")}
+        </div>
+
+        <h4>Recommended Jobs</h4>
+        <ul>
+            ${market_analysis.recommended_job_titles.map(job => `
+                <li>
+                    <strong>${job.title}</strong> — ${job.company} (${job.location})
+                </li>
+            `).join("")}
+        </ul>
+
+        <p><strong>Summary:</strong> ${market_analysis.market_summary}</p>
+    </div>
+    `;
     }
 
 });
