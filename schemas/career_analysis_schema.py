@@ -8,6 +8,7 @@ from schemas.job_schema import JobSchema
 from schemas.gap_schema import GapSchema
 from schemas.interview_schema import InterviewSchema
 from schemas.roadmap_schema import RoadmapSchema
+from schemas.market_schema import MarketSchema
 
 # Schema for Career Analysis
 
@@ -26,3 +27,4 @@ class CareerAnalysisSchema(BaseModel):
     gap_analysis: GapSchema
     interview_analysis: InterviewSchema
     learning_roadmap: RoadmapSchema
+    market_analysis: MarketSchema
