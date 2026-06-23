@@ -7,6 +7,7 @@ from schemas.job_schema import JobSchema
 from schemas.interview_schema import InterviewSchema
 from schemas.gap_schema import GapSchema
 from schemas.roadmap_schema import RoadmapSchema
+from schemas.market_schema import MarketSchema
 
 
 class CareerResponse(BaseModel):
@@ -32,4 +33,8 @@ class CareerResponse(BaseModel):
 
     learning_roadmap: RoadmapSchema = Field(
         description="Personalized recommendations and learning plan to address identified skill gaps."
+    )
+
+    market_analysis: MarketSchema = Field(
+        description="Market intelligence and job recommendations."
     )
