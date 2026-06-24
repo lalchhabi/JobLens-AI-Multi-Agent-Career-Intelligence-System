@@ -329,6 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderMarket(market_analysis) {
+        console.log("Market Object = ", market_analysis);
     if (!market_analysis) return "";
 
     return `
@@ -337,31 +338,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
         <h4>Similar Roles</h4>
         <ul>
-            ${market_analysis.similar_roles.map(r => `<li>${r}</li>`).join("")}
+            ${(market_analysis.similar_roles || []).map(r => `<li>${r}</li>`).join("")}
         </ul>
 
         <h4>Alternative Roles</h4>
         <ul>
-            ${market_analysis.alternative_roles.map(r => `<li>${r}</li>`).join("")}
+            ${(market_analysis.alternative_roles || []).map(r => `<li>${r}</li>`).join("")}
         </ul>
 
         <h4>Trending Skills</h4>
         <div class="tags">
-            ${market_analysis.trending_skills.map(s => `<span class="tag">${s}</span>`).join("")}
+            ${(market_analysis.trending_skills || []).map(s => `<span class="tag">${s}</span>`).join("")}
         </div>
 
         <h4>Recommended Jobs</h4>
         <ul>
-            ${market_analysis.recommended_job_titles.map(job => `
+            ${(market_analysis.recommended_jobs || []).map(job => `
                 <li>
-                    <strong>${job.title}</strong> — ${job.company} (${job.location})
+                    <strong>${job.title}</strong>
+                    ${job.company}
+                    (${job.location})
                 </li>
             `).join("")}
         </ul>
 
-        <p><strong>Summary:</strong> ${market_analysis.market_summary}</p>
+        <p>
+            <strong>Summary:</strong>
+            ${market_analysis.market_summary || ""}
+        </p>
     </div>
     `;
-    }
+}
 
 });
