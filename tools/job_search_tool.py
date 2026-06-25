@@ -41,7 +41,7 @@ class JobSearchTool():
         
         results = []
 
-        query = f"{target_role} jobs"
+        query = f"{target_role} skills in demand 2026"
 
         with DDGS() as ddgs:
             search_results = ddgs.text(
@@ -51,9 +51,10 @@ class JobSearchTool():
         
         for item in search_results:
             results.append({
-                "title": item.get('title'),
-                "body": item.get("body"),
-                "url": item.get("href")
+                "title": item.get('title', "Unknown Job"),
+                "company": "Unknown",
+                "location": "Unknown",
+                "url": item.get("href", "")
 
             })
     

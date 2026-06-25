@@ -4,10 +4,9 @@ from typing import List
 
 class JobRecommendation(BaseModel):
     title: str
-    company: str
-    location: str
     url: str
-
+    company: str | None = None
+    location: str | None = None
 
 
 # Define market job schema
@@ -23,9 +22,5 @@ class MarketSchema(BaseModel):
     trending_skills: List[str] = Field(
         default_factory = list,
         description = "Most demanded skills across current job market"
-    )
-    recommended_jobs: List[JobRecommendation] = Field(
-        default_factory=list,
-        description="Real job recommendations collected from job search"
     )
     market_summary: str = Field(description = "Overall summary of market opportunities and hiring trends")
