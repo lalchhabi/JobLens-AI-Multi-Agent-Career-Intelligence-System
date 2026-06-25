@@ -22,16 +22,18 @@ class MarketAgent:
     ):
 
         # Step 1: Get Jobs from tool
-        jobs = self.job_tool.search_jobs(
+        jobs = self.job_tool.search_similar_roles(
             target_role=job_analysis['title'],
-            limit=5
+            max_results=5
         )
+
 
         # STEP 2: Convert to schema objects
         job_objects = [
             JobRecommendation(**job)
             for job in jobs
         ]
+        print(f"job objects: {job_objects}")
 
         # STEP 3: Build prompt
         prompt = MARKET_PROMPT.format(
@@ -45,7 +47,6 @@ class MarketAgent:
         # STEP 4: LLM call
         response = self.llm.invoke(prompt)
 
-        print(response.content)
         result = self.parser.parse(response.content)
 
         # STEP 5: Inject real jobs 
