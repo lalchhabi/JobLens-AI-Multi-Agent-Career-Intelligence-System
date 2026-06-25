@@ -350,18 +350,6 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="tags">
             ${(market_analysis.trending_skills || []).map(s => `<span class="tag">${s}</span>`).join("")}
         </div>
-
-        <h4>Recommended Jobs</h4>
-        <ul>
-            ${(market_analysis.recommended_jobs || []).map(job => `
-                <li>
-                    <strong>${job.title}</strong>
-                    ${job.company}
-                    (${job.location})
-                </li>
-            `).join("")}
-        </ul>
-
         <p>
             <strong>Summary:</strong>
             ${market_analysis.market_summary || ""}
