@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyd
+*.pyc
+
+# Virtual environments
+job_agent/
+
+# Environment Variables
+*.env
+
+# Git
+.git/
+.gitignore
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Testing
+test.py 
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Docker
+Dockerfile.old
+docker-compose.override.yml
+
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Database
+*.sqlite3
+*.db
+
+# Other files
+*.json
