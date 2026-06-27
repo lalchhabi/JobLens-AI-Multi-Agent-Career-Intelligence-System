@@ -263,6 +263,10 @@ ai-career-copilot/
 │
 ├── requirements.txt
 └── README.md
+├── .dockerignore
+└── .gitignore
+├── Dockerfile
+└── docker-compose.yml
 ```
 
 ---
