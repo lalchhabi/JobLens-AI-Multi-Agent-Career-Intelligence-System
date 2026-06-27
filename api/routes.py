@@ -30,12 +30,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 UPLOAD_DIR = 'uploads'
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+@router.get("/health", tags=["Health"])
+async def health_check():
+    """Health check endpoint to verify the API is running.
+    """
+    return {
+        "status": "healthy",
+        'service': "JobLens AI"
+    }
+
 @router.get("/")
 def home(request: Request):
     return templates.TemplateResponse(
        "index.html",
        {'request': request}
     )
+
         
 @router.post("/analyze", response_model=CareerResponse)
 async def analyze_career(
