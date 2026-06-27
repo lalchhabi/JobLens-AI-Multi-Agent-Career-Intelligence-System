@@ -7,11 +7,11 @@ on:
   push:
     # Only run for this branches
     branches:
-      - main
+      - master
 
   # Run when PR is created to main branch
   pull_request:
-    branches: ['main']
+    branches: ['master']
 
 # Jobs (task to run)
 jobs:
