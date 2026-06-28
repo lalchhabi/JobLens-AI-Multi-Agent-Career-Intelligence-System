@@ -5,6 +5,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from prompts.job_prompt import JOB_PROMPT
 from services.llm_service import get_llm_model
 from schemas.job_schema import JobSchema
+from utils.llm_retry import safe_llm_call
 
 
 class JobAgent:
@@ -13,7 +14,7 @@ class JobAgent:
     def __init__(self):
         # Initialize llm model
         self.llm_model = get_llm_model()
-
+        self.agent_name = "Job Agent"
          # Create pydantic parser for structured output validation
         self.parser = PydanticOutputParser(pydantic_object=JobSchema)
 
@@ -34,7 +35,11 @@ class JobAgent:
         )
 
         # Call the LLM model
-        response = self.llm_model.invoke(prompt)
+        response = safe_llm_call(
+            lambda: self.llm_model.invoke(prompt),
+            prompt=prompt,
+            agent_name=self.agent_name,
+        )
 
         # Parse LLM output into structured Pydantic object
         result = self.parser.parse(response.content)

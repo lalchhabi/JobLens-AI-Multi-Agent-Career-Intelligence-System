@@ -23,7 +23,7 @@ class RoadmapAgent():
     def __init__(self):
         # Initialize LLM model
         self.llm = get_llm_model()
-
+        self.agent_name = "Roadmap Agent"
         # Create pydantic parser for structured output validation
         self.parser = PydanticOutputParser(pydantic_object=RoadmapSchema)
 
@@ -60,12 +60,13 @@ class RoadmapAgent():
         )
 
         # Call the model and generate the response
-        response = safe_llm_call(lambda: self.llm.invoke(prompt))
+        response = safe_llm_call(
+        lambda: self.llm.invoke(prompt),
+        prompt=prompt,
+        agent_name=self.agent_name,
+    )
 
         # Convert the raw result into structured output
         result = self.parser.parse(response.content)
-
-        print(type(gap_data))
-        print(type(job_data))
 
         return result

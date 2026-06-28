@@ -4,6 +4,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from tools.job_search_tool import JobSearchTool
 from schemas.market_schema import MarketSchema, JobRecommendation
 from services.llm_service import get_llm_model
+from utils.llm_retry import safe_llm_call
 from prompts.market_prompt import MARKET_PROMPT
 import json
 
@@ -12,6 +13,7 @@ class MarketAgent:
     def __init__(self):
         self.job_tool = JobSearchTool()
         self.llm = get_llm_model()
+        self.agent_name = "Market Agent"
         self.parser = PydanticOutputParser(pydantic_object=MarketSchema)
 
     def analyze_market(
@@ -45,7 +47,12 @@ class MarketAgent:
         )
 
         # STEP 4: LLM call
-        response = self.llm.invoke(prompt)
+        # Call the LLM model
+        response = safe_llm_call(
+            lambda: self.llm.invoke(prompt),
+            prompt=prompt,
+            agent_name=self.agent_name,
+        )
 
         result = self.parser.parse(response.content)
 
