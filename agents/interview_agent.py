@@ -6,9 +6,14 @@ import json
 from prompts.interview_prompt import INTERVIEW_PROMPT
 from schemas.interview_schema import InterviewSchema
 from services.llm_service import get_llm_model
+from utils.llm_retry import safe_llm_call
 from schemas.resume_schema import ResumeSchema
 from schemas.job_schema import JobSchema
 from schemas.gap_schema import GapSchema
+from utils.logger import get_logger
+
+# Define logger
+logger = get_logger(__name__)
 
 class InterviewAgent:
     """
@@ -28,7 +33,7 @@ class InterviewAgent:
         
         # Initialize LLM model
         self.llm_model = get_llm_model()
-
+        self.agent_name = "Interview Agent"
 
         # Define pydantic parser to get structured output
         self.parser = PydanticOutputParser(pydantic_object=InterviewSchema)
@@ -72,8 +77,18 @@ class InterviewAgent:
             difficulty_level = difficult_level,
             format_instructions = self.parser.get_format_instructions()
         )
+
+        logger.info(f"Template         : {len(INTERVIEW_PROMPT)}")
+        logger.info(f"Resume Analysis  : {len(str(project_info))}")
+        logger.info(f"Gap Analysis     : {len(str(learning_recommend))}")
+        logger.info(f"Job Analysis     : {len(str(job_description))}")
+
         # Call the LLM model to generate interview questions
-        response = self.llm_model.invoke(prompt)
+        response = safe_llm_call(
+            lambda: self.llm_model.invoke(prompt),
+            prompt=prompt,
+            agent_name=self.agent_name,
+        )
 
         # Convert raw result into structured format 
         result = self.parser.parse(response.content)
