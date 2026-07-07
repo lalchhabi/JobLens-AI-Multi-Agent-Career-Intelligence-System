@@ -1,11 +1,4 @@
 # Import project file
-from tools.pdf_parser import PDFparser
-
-from agents.resume_agent import ResumeAgent
-from agents.job_agent import JobAgent
-from agents.gap_agent import GapAnalysisAgent
-from agents.interview_agent import InterviewAgent
-from agents.roadmap_agent import RoadmapAgent
 
 from schemas.career_analysis_schema import CareerAnalysisSchema
 from utils.logger import get_logger
@@ -118,7 +111,7 @@ class CareerAnalysisService():
             logger.info("Streaming workflow completed")
 
         except Exception as e:
-            logger.error(f"Streaming workflow failed: {str(e)}")
+            logger.exception(f"Streaming workflow failed")
 
             yield{
                 "type":"error",

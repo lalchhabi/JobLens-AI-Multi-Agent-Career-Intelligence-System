@@ -1,6 +1,5 @@
 # Import libraries
 from langchain_core.output_parsers import PydanticOutputParser
-import json
 
 # Import project files
 from prompts.interview_prompt import INTERVIEW_PROMPT
@@ -11,6 +10,8 @@ from schemas.resume_schema import ResumeSchema
 from schemas.job_schema import JobSchema
 from schemas.gap_schema import GapSchema
 from utils.logger import get_logger
+from services.context_builder import build_interview_context
+
 
 # Define logger
 logger = get_logger(__name__)
@@ -69,19 +70,28 @@ class InterviewAgent:
                 - project_questions
         """
 
-        # Build final prompt
-        prompt = INTERVIEW_PROMPT.format(
-            resume_projects = json.dumps(project_info, indent=2, default=str),
-            job_description = json.dumps(job_description, indent=2, default=str),
-            learning_recommendations = json.dumps(learning_recommend, indent=2, default=str),
-            difficulty_level = difficult_level,
-            format_instructions = self.parser.get_format_instructions()
+        format_instructions = self.parser.get_format_instructions()
+        
+        resume_detail = ResumeSchema(**project_info)
+        job_detail = JobSchema(**job_description)
+        gap_detail = GapSchema(**learning_recommend)
+
+
+        interview_context = build_interview_context(
+            resume_detail,
+            job_detail,
+            gap_detail,
         )
 
-        logger.info(f"Template         : {len(INTERVIEW_PROMPT)}")
-        logger.info(f"Resume Analysis  : {len(str(project_info))}")
-        logger.info(f"Gap Analysis     : {len(str(learning_recommend))}")
-        logger.info(f"Job Analysis     : {len(str(job_description))}")
+        # Build final prompt
+        prompt = INTERVIEW_PROMPT.format(
+            interview_context=interview_context,
+            difficulty_level=difficult_level,
+            format_instructions=format_instructions,
+        )
+
+        logger.info("Interview Agent Prompt Profile")
+        logger.info(f"Final Prompt          : {len(prompt)}")
 
         # Call the LLM model to generate interview questions
         response = safe_llm_call(
