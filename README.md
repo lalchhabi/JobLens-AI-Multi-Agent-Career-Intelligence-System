@@ -2,21 +2,7 @@
 # 📌 JobLens-AI-Multi-Agent-Career-Intelligence-System
 
 ### Multi-Agent Job Search & Career Optimization System
-JobLens AI is a LangGraph-powered multi-agent career intelligence system that helps job seekers evaluate their resumes against job descriptions. The system orchestrates specialized AI agents to perform resume analysis, job understanding, skill gap identification, interview preparation, and personalized learning roadmap generation.
-
-Built with FastAPI, LangChain, LangGraph, and Large Language Models, JobLens AI demonstrates how agent workflows can be structured into production-ready AI applications.
-
-
-An **agentic AI system** that helps users:
-
-* Analyze job descriptions
-* Extract resume insights
-* Perform skill gap analysis
-* Generate interview questions
-* Recommend jobs
-* Build personalized learning roadmaps
-
-Built using **LangGraph / LangChain, FastAPI, and LLM tool-calling agents**
+JobLens AI is a production-oriented multi-agent career intelligence platform built with LangGraph, LangChain, FastAPI, and Large Language Models. It analyzes resumes against job descriptions using specialized AI agents that perform resume parsing, job understanding, deterministic skill gap analysis, interview preparation, market insights, and personalized learning roadmap generation. It demonstrates how agent workflows can be structured into production-ready AI applications.
 
 ---
 
@@ -58,55 +44,104 @@ This system acts as a **personal AI career coach + recruiter assistant**:
 # 🧠 System Architecture
 
 ```
-                 ┌─────────────────────┐
-                 │   User Input (UI)   │
-                 │ Resume + Job Post   │
-                 └─────────┬───────────┘
-                           │
-                           ▼
-        ┌──────────────────────────────────┐
-        │        Orchestrator (LangGraph)  │
-        └──────────────────────────────────┘
-             │          │          │
-             ▼          ▼          ▼
-
- ┌────────────────┐ ┌────────────────┐ ┌──────────────────┐
- │ Resume Agent   │ │ Job Agent      │ │ Tool Agents      │
- │ (Parser)       │ │ (Extractor)    │ │ GitHub / Web     │
- └────────────────┘ └────────────────┘ └──────────────────┘
-             │          │
-             └────┬─────┘
-                  ▼
-        ┌───────────────────────┐
-        │ Gap Analysis Agent    │
-        └───────────────────────┘
-                  ▼
-        ┌───────────────────────┐
-        │ Output Generator      │
-        │ (Roadmap + Q/A + Fit) │
-        └───────────────────────┘
+                                    ┌──────────────────────────────┐
+                                    │          User (UI)           │
+                                    │ Resume PDF + Job Description │
+                                    └──────────────┬───────────────┘
+                                                   │
+                                                   ▼
+                                  ┌─────────────────────────────────┐
+                                  │     FastAPI REST API Layer      │
+                                  │  (/analyze-stream endpoint)     │
+                                  └─────────────────────────────────┘
+                                                   │
+                                                   ▼
+                           ┌─────────────────────────────────────────────┐
+                           │       LangGraph Workflow Orchestrator       │
+                           │     Stateful Multi-Agent Execution Engine   │
+                           └─────────────────────────────────────────────┘
+                                                   │
+        ┌──────────────────────────────────────────┼──────────────────────────────────────────┐
+        │                                          │                                          │
+        ▼                                          ▼                                          ▼
+┌──────────────────────┐                 ┌──────────────────────┐                 ┌──────────────────────┐
+│   PDF Parser Tool    │                 │   Resume Agent       │                 │    Job Agent         │
+│  Extract Resume Text │                 │ Resume Understanding │                 │ Job Requirement      │
+└──────────────────────┘                 └──────────────────────┘                 │ Extraction           │
+        │                                          │                              └──────────────────────┘
+        │                                          │
+        └──────────────────────────────┬───────────┘
+                                       ▼
+                        ┌────────────────────────────────────┐
+                        │      Structured Pydantic Models     │
+                        │ ResumeSchema + JobSchema            │
+                        └────────────────────────────────────┘
+                                       │
+                                       ▼
+                     ┌────────────────────────────────────────────┐
+                     │        Context Builder Service             │
+                     │ Compresses Resume & Job Context            │
+                     │ Removes Unused Fields                      │
+                     │ Reduces LLM Token Usage                    │
+                     └────────────────────────────────────────────┘
+                                       │
+                                       ▼
+                          ┌───────────────────────────────┐
+                          │      Gap Analysis Agent       │
+                          │ Semantic Skill Matching       │
+                          └───────────────────────────────┘
+                                       │
+                                       ▼
+                    ┌─────────────────────────────────────────────┐
+                    │ Deterministic Scoring Engine (Backend)      │
+                    │ Required Skill Score                        │
+                    │ Preferred Skill Score                       │
+                    │ Overall Match Score                         │
+                    └─────────────────────────────────────────────┘
+                                       │
+                  ┌────────────────────┼─────────────────────┐
+                  ▼                    ▼                     ▼
+      ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐
+      │ Interview Agent    │  │ Market Agent       │  │ Roadmap Agent       │
+      │ Personalized Q&A   │  │ Market Insights    │  │ Learning Roadmap    │
+      └────────────────────┘  │ Job Search Tool    │  └────────────────────┘
+                              └────────────────────┘
+                  └────────────────────┼─────────────────────┘
+                                       ▼
+                         ┌──────────────────────────────────┐
+                         │ Streaming JSON Response          │
+                         │ Resume Analysis                  │
+                         │ Job Analysis                     │
+                         │ Gap Analysis                     │
+                         │ Interview Questions              │
+                         │ Market Insights                  │
+                         │ Learning Roadmap                 │
+                         └──────────────────────────────────┘
 ```
 # LangGraph Workflow
 
 JobLens AI uses LangGraph to orchestrate the complete career intelligence pipeline.
 
-Resume PDF
-↓
-Parser Node
-↓
-Resume Analysis Agent
-↓
-Job Analysis Agent
-↓
-Gap Analysis Agent
-↓
-Interview Preparation Agent
-↓
-Learning Roadmap Agent
-↓
-Structured Career Intelligence Report
+```
 
-Each node focuses on a specialized task while LangGraph manages the execution flow and state transitions between agents.
+Parser
+   │
+Resume Agent
+   │
+Job Agent
+   │
+Gap Agent
+   │
+ ├──────────────┐
+ │              │
+ ▼              ▼
+Interview     Market
+ Agent         Agent
+      \       /
+       ▼     ▼
+     Roadmap Agent
+
+```
 
 ---
 
@@ -162,10 +197,16 @@ Each node focuses on a specialized task while LangGraph manages the execution fl
 
 ```json
 {
-  "match_score": 78,
-  "missing_skills": [],
-  "strong_skills": [],
-  "recommendations": []
+  "matched_required_skills": [],
+  "missing_required_skills": [],
+  "matched_preferred_skills": [],
+  "missing_preferred_skills": [],
+  "learning_recommendation": [],
+  "match_score": {
+      "overall_score": 82,
+      "required_skill_score": 75,
+      "preferred_skill_score": 100
+  }
 }
 ```
 
@@ -203,63 +244,169 @@ Generates:
 
 ## Backend
 
-* Python 3.10+
-* FastAPI
-* Pydantic
+- Python 3.12
+- FastAPI
+- Pydantic v2
+- Uvicorn
 
-## AI / Agents
+## AI & LLM Orchestration
 
-* LangChain
-* LangGraph
-* OpenAI / Groq / Gemini API
+- LangChain
+- LangGraph
+- Groq API
+- Prompt Engineering
+- Structured Output Parsing
+
+## AI Architecture
+
+- Multi-Agent Architecture
+- Stateful Workflow Orchestration
+- Context Builder (Token Optimization)
+- Deterministic Scoring Engine
+- Streaming Responses (SSE)
 
 ## Document Processing
 
-* PyMuPDF (fitz)
-* pdfplumber
+- PyMuPDF (fitz)
 
-## Vector DB (optional)
+## Data Validation
 
-* FAISS
+- Pydantic Schemas
+- JSON Structured Outputs
 
-## Tools Integration
+## Utilities
 
-* GitHub API
-* Web scraping (BeautifulSoup / Playwright)
+- DuckDuckGo Search (DDGS)
+- Python Logging
 
 ## Frontend
 
-* React OR simple HTML/CSS/JS dashboard
+- HTML5
+- CSS3
+- Vanilla JavaScript
 
+## Development
+
+- Git
+- GitHub
+- Virtual Environment (venv)
+
+## Deployment & DevOps
+
+- Docker
+- GitHub Actions (Continuous Integration)
+
+---
+
+# ✨ Key Features
+
+- Multi-agent AI workflow powered by LangGraph
+- Resume parsing from PDF documents
+- Structured job description analysis
+- Deterministic resume-job match scoring
+- Semantic skill gap analysis
+- AI-generated interview questions
+- Personalized learning roadmap
+- Market insights and job recommendations
+- Real-time streaming analysis with FastAPI
+- Structured JSON outputs using Pydantic
+- Dockerized deployment
+- GitHub Actions CI pipeline
 ---
 
 # 🧱 Project Structure
 
 ```
-ai-career-copilot/
+joblens_AI/
 │
-├── app/
-│   ├── main.py
-│   ├── config.py
 │
 ├── agents/
 │   ├── resume_agent.py
 │   ├── job_agent.py
 │   ├── gap_agent.py
 │   ├── interview_agent.py
+│   ├── market_agent.py
+│   ├── roadmap_agent.py
+│  
+├── api/
+│   ├── routes.py
+│
+├── data/
+│   ├── jobs
+│   ├── results 
+│   ├── resume
+│
+├── graph/
+│   ├── nodes.py   
+│   ├── state.py 
+│   ├── workflow.py 
+│ 
+├── app/
+│   ├── main.py
+│
+├── graph/
+│   ├── nodes.py   
+│   ├── state.py 
+│   ├── workflow.py 
+│
+├── prompts/
+│   ├── gap_prompt.py
+│   ├── interview_prompt.py
+│   ├── job_prompt.py
+│   ├── market_prompt.py
+│   ├── resume_prompt.py
+│   ├── roadmap_prompt.py
+│
+├── schemas/
+│   ├── career_analysis_schema.py
+│   ├── career_response_schema.py
+│   ├── gap_schema.py
+│   ├── interview_schema.py
+│   ├── job_schema.py
+│   ├── market_schema.py
+│   ├── match_score_schema.py
+│   ├── resume_schema.py
+│   ├── roadmap_schema.py
+│ 
+├── services/
+│   ├── career_analysis_service.py
+│   ├── context_builder.py
+│   ├── llm_service.py
+│   ├── scoring_engine.py
+│
+├── tests/
 │
 ├── tools/
 │   ├── pdf_parser.py
-│   ├── github_tool.py
-│   ├── web_tool.py
-│
-├── graph/
-│   ├── workflow.py   # LangGraph orchestration
+│   ├── job_search_tool.py
+│ 
+├── ui/
+│   ├── static/
+│   │     ├── script.js
+│   │     ├── style.css
+│   ├── templates/
+│        ├── index.html
+│ 
+├── ui/
+│   ├── static/
+│   │     ├── script.js
+│   │     ├── style.css
+│   ├── templates/
+│        ├── index.html
+│ 
+├── uploads/
+│ 
+├── utils/
+│   ├── llm_retry.py
+│   ├── logger.py 
+│   ├── save_results.py
+│   ├── validators.py
 │
 ├── data/
+│   ├── jobs
+│   ├── results 
+│   ├── resume
 │
-├── frontend/
-│   ├── index.html
 │
 ├── requirements.txt
 └── README.md
@@ -304,9 +451,8 @@ pip install -r requirements.txt
 Create `.env`
 
 ```env
-OPENAI_API_KEY=your_key
+HUGGINGFACEHUB_ACCESS_TOKEN=your_token
 GROQ_API_KEY=your_key
-GITHUB_TOKEN=your_token
 ```
 
 ---
@@ -319,42 +465,20 @@ uvicorn app.main:app --reload
 
 ---
 
-# 🧪 API Endpoints (MVP)
+# 🧪 API Endpoints
 
-## Upload Resume
-
-```
-POST /upload-resume
-```
-
-## Analyze Job
-
-```
-POST /analyze-job
-```
-
-## Run Full Pipeline
-
-```
-POST /analyze
-```
-
-Response:
-
-```json
-{
-  "resume_analysis": {},
-  "job_analysis": {},
-  "gap_analysis": {},
-  "interview_analysis": []
-}
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/upload-resume` | Uploads a resume PDF for processing. |
+| POST | `/analyze-job` | Analyzes a job description and extracts structured requirements. |
+| POST | `/analyze-stream` | Executes the complete LangGraph multi-agent workflow and streams results to the frontend in real time. |
 ---
 
 # 📈 Future Improvements
-
-* Real-time LinkedIn job ingestion
-* Memory-based career tracking
-* RAG-based resume improvement system
-* Personalized AI recruiter chatbot
-* MCP server expansion (filesystem, browser automation)
+- **Job URL Analysis** – Automatically extract and analyze job descriptions directly from LinkedIn and company career pages.
+- **Resume Optimization** – Generate ATS-friendly resume suggestions tailored to specific job descriptions using RAG and LLMs.
+- **Conversation Memory** – Persist user career history and previous analyses to provide personalized long-term guidance.
+- **Interactive AI Career Coach** – Enable multi-turn conversations for resume reviews, interview preparation, and career planning.
+- **Multi-LLM Routing** – Dynamically route tasks to the most suitable model (Groq, OpenAI, Gemini, etc.) based on latency, cost, and capability.
+- **Analytics Dashboard** – Visualize skill gaps, match scores, interview readiness, and learning progress over time.
+- **Production Deployment** – Containerize the application with Docker and deploy on cloud platforms using CI/CD pipelines.
