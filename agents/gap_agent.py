@@ -2,7 +2,7 @@
 from langchain_core.output_parsers import PydanticOutputParser
 
 # Import project files
-from prompts.gap_prompt import GAP_PROMPT
+from prompts.gap_prompt import GAP_PROMPT, FORMAT_INSTRUCTIONS
 from schemas.gap_schema import GapSchema, GapLLMSchema
 from schemas.resume_schema import ResumeSchema
 from services.llm_service import get_llm_model
@@ -57,12 +57,10 @@ class GapAnalysisAgent:
 
         resume_context = build_gap_context(resume)
 
-        format_instructions = self.parser.get_format_instructions()
-
         prompt = GAP_PROMPT.format(
             resume_data = resume_context, 
             job_data = job_description,
-            format_instructions = format_instructions
+            format_instructions = FORMAT_INSTRUCTIONS
             )
         
         # Call LLM 
@@ -71,6 +69,10 @@ class GapAnalysisAgent:
             prompt=prompt,
             agent_name=self.agent_name,
         )
+
+        logger.info("===== RAW LLM RESPONSE =====")
+        logger.info(response.content)
+
 
         # Parse only LLM Output
         llm_result: GapLLMSchema = self.parser.parse(response.content)
@@ -114,6 +116,13 @@ class GapAnalysisAgent:
             learning_recommendation=llm_result.learning_recommendation,
             match_score=score,
         )
+
+        logger.info("===== GAP PROMPT =====")
+        logger.info(prompt)
+        logger.info("======================")
+
+        logger.info("LLM Gap Output:")
+        logger.info(llm_result.model_dump())
 
         logger.info("Gap analysis started")
         logger.info(f"Final prompt size: {len(prompt)} characters")
