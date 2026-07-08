@@ -43,3 +43,24 @@ GAP_PROMPT = """
     - Do NOT duplicate skills.
     - A skill CANNOT appear in both matched and missing lists.
     """
+
+
+FORMAT_INSTRUCTIONS = """
+Return ONLY one valid JSON object.
+
+Do NOT output the schema.
+Do NOT repeat the schema.
+Do NOT include markdown.
+Do NOT use ```json.
+Do NOT include explanations.
+
+The JSON must contain exactly these fields:
+
+{
+  "matched_required_skills": [],
+  "missing_required_skills": [],
+  "matched_preferred_skills": [],
+  "missing_preferred_skills": [],
+  "learning_recommendation": []
+}
+"""
