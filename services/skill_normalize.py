@@ -1,7 +1,3 @@
-"""
-Utility functions for normalizing job skills before they are sent to the LLM or the module that converts compound skills into individual skills so the LLM can perform more accurate semantic matching.
-"""
-
 from __future__ import annotations
 
 import re
