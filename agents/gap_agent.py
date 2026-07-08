@@ -5,7 +5,9 @@ from langchain_core.output_parsers import PydanticOutputParser
 from prompts.gap_prompt import GAP_PROMPT, FORMAT_INSTRUCTIONS
 from schemas.gap_schema import GapSchema, GapLLMSchema
 from schemas.resume_schema import ResumeSchema
+from schemas.job_schema import JobSchema
 from services.llm_service import get_llm_model
+from services.skill_normalize import normalize_skills
 from utils.llm_retry import safe_llm_call
 from utils.logger import get_logger
 import services.scoring_engine as scoring_engine
@@ -54,12 +56,17 @@ class GapAnalysisAgent:
 
         # Parse resume into schema
         resume = ResumeSchema(**resume_detail)
+        job = JobSchema(**job_description)
+
+        # Normalize job skills before sending them to the LLM
+        job.required_skills = normalize_skills(job.required_skills)
+        job.preferred_skills = normalize_skills(job.preferred_skills)
 
         resume_context = build_gap_context(resume)
 
         prompt = GAP_PROMPT.format(
             resume_data = resume_context, 
-            job_data = job_description,
+            job_data = job.model_dump(),
             format_instructions = FORMAT_INSTRUCTIONS
             )
         
