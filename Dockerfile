@@ -4,6 +4,12 @@ FROM python:3.12-slim
 # Set the working directory
 WORKDIR /app
 
+# Prevent Python from creating .pyc files
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Enable real-time logging
+ENV PYTHONUNBUFFERED=1
+
 # Copy dependency file
 COPY requirements.txt .
 
