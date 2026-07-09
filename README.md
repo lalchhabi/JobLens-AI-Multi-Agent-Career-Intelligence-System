@@ -291,12 +291,19 @@ Generates:
 - GitHub
 - Virtual Environment (venv)
 
+# Deployment
+
+## Live Demo
+
+- **Render (Production Demo):**
+  https://joblens-ai-multi-agent-career.onrender.com
+
 ## Deployment & DevOps
-
 - Docker
-- GitHub Actions (Continuous Integration)
-
----
+- Docker Compose
+- GitHub Actions (CI/CD)
+- Render
+- AWS EC2
 
 # ✨ Key Features
 
@@ -472,6 +479,39 @@ uvicorn app.main:app --reload
 | POST | `/upload-resume` | Uploads a resume PDF for processing. |
 | POST | `/analyze-job` | Analyzes a job description and extracts structured requirements. |
 | POST | `/analyze-stream` | Executes the complete LangGraph multi-agent workflow and streams results to the frontend in real time. |
+---
+
+# 🚀 Deployment
+
+## Live Demo
+
+**Render (Production Demo)**
+
+https://joblens-ai-multi-agent-career.onrender.com
+
+## Deployment Platforms
+
+### Render
+
+- Dockerized deployment
+- Automatic deployment from GitHub
+- GitHub Actions CI/CD
+- HTTPS-enabled public demo
+
+### AWS EC2
+
+- Ubuntu EC2
+- Docker
+- Docker Compose
+- FastAPI + Uvicorn
+- Environment variables managed through `.env`
+- Public deployment via EC2 Security Groups
+
+## Run Locally
+
+```bash
+docker compose up --build
+
 ---
 
 # 📈 Future Improvements
