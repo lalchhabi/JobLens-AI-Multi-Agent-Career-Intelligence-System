@@ -98,8 +98,6 @@ class CareerAnalysisService():
                         if key in ["event", "metadata"]:
                             continue
 
-                        logger.info(f"STREAM EVENT: {key}")
-
                         yield {
                             "type": key,
                             "data": 
