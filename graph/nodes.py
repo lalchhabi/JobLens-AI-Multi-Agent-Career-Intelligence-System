@@ -7,6 +7,7 @@ from agents.gap_agent import GapAnalysisAgent
 from agents.interview_agent import InterviewAgent
 from agents.roadmap_agent import RoadmapAgent
 from agents.market_agent import MarketAgent
+from agents.cover_letter_agent import CoverLetterAgent
 
 resume_agent = ResumeAgent()
 job_agent = JobAgent()
@@ -14,6 +15,7 @@ gap_agent = GapAnalysisAgent()
 interview_agent = InterviewAgent()
 roadmap_agent = RoadmapAgent()
 market_agent = MarketAgent()
+cover_letter_agent = CoverLetterAgent()
 
 parser = PDFparser()
 
@@ -80,4 +82,20 @@ def market_node(state):
 
     return {
         "market_analysis":result.model_dump()
+    }
+
+def cover_letter_node(state):
+
+    result = cover_letter_agent.generate_cover_letter(
+        resume_context=state["resume_analysis"],
+        job_description=state["job_analysis"],
+        gap_analysis=state["gap_analysis"],
+        company_name=state["job_analysis"]["company"],
+        title=state["job_analysis"]["title"],
+        tone="Professional"
+    )
+
+    return {
+        "cover_letter": result.model_dump()
+
     }

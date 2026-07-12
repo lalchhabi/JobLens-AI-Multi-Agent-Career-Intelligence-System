@@ -77,10 +77,6 @@ class GapAnalysisAgent:
             agent_name=self.agent_name,
         )
 
-        logger.info("===== RAW LLM RESPONSE =====")
-        logger.info(response.content)
-
-
         # Parse only LLM Output
         llm_result: GapLLMSchema = self.parser.parse(response.content)
 
@@ -123,10 +119,6 @@ class GapAnalysisAgent:
             learning_recommendation=llm_result.learning_recommendation,
             match_score=score,
         )
-
-        logger.info("===== GAP PROMPT =====")
-        logger.info(prompt)
-        logger.info("======================")
 
         logger.info("LLM Gap Output:")
         logger.info(llm_result.model_dump())

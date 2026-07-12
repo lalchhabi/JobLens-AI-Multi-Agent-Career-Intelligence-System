@@ -32,6 +32,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 2500);
     }
 
+    async function copyText(text) {
+    try {
+            await navigator.clipboard.writeText(text);
+            showToast("Copied ✔", "#2ecc71");
+        } catch (err) {
+            console.error(err);
+            showToast("Failed to copy", "#e74c3c");
+    }
+    }
+
     function setLoading(isLoading) {
         if (isLoading) {
             btn.innerText = "⏳ Analyzing...";
@@ -87,7 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 gap_analysis: null,
                 interview_analysis: null,
                 learning_roadmap: null,
-                market_analysis: null
+                market_analysis: null,
+                cover_letter: null
             };
 
             resultDiv.innerHTML = `
@@ -151,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     const key = event.type;
                     partialData[key] = event.data;
+                    console.log("Current partialData:", partialData)
 
                     if (key) {
                         partialData[key] = event.data;
@@ -162,7 +174,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         gap: "Gap Analysis",
                         interview: "Interview Questions",
                         roadmap: "Learning Roadmap",
-                        market_analysis: "Market Insights"
+                        market_analysis: "Market Insights",
+                        cover_letter: "Application Assistant"
                     };
                     const uiKey = map[event.type];
                     showToast(`${uiKey} completed ✔`, "#3498db");
@@ -188,6 +201,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         ${partialData.market_analysis 
                             ? renderMarket(partialData.market_analysis) 
                             : "<p>📚 Market Analysis running...</p>"}
+
+                        ${partialData.cover_letter
+                            ? renderCoverLetter(partialData.cover_letter)
+                            : "<p>✉️ Generating application materials...</p>"
+                        }
                     `;
                 }
             }
@@ -205,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =============================
-    // FILE UPLOAD NOTIFICATION (NEW)
+    // FILE UPLOAD NOTIFICATION 
     // =============================
     resumeInput.addEventListener("change", function () {
         if (this.files.length > 0) {
@@ -253,10 +271,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderGap(gap) {
-        function renderGap(gap) {
         console.log("NEW renderGap loaded");
         console.log(gap);
-        }
+        
 
     return `
     <div class="card">
@@ -385,6 +402,45 @@ document.addEventListener("DOMContentLoaded", function () {
             <strong>Summary:</strong>
             ${market_analysis.market_summary || ""}
         </p>
+    </div>
+    `;
+    }
+
+    function renderCoverLetter(data) {
+
+    return `
+    <div class="card">
+
+        <h2>📨 Application Assistant</h2>
+
+        <h3>📄 Cover Letter</h3>
+
+        <pre>${data.full_cover_letter}</pre>
+
+        <button onclick="copyText(\`${data.full_cover_letter}\`)">
+            Copy
+        </button>
+
+        <hr>
+
+        <h3>📧 Application Email</h3>
+
+        <pre>${data.application_email}</pre>
+
+        <button onclick="copyText(\`${data.application_email}\`)">
+            Copy
+        </button>
+
+        <hr>
+
+        <h3>💼 LinkedIn Message</h3>
+
+        <pre>${data.linkedin_message}</pre>
+
+        <button onclick="copyText(\`${data.linkedin_message}\`)">
+            Copy
+        </button>
+
     </div>
     `;
 }
