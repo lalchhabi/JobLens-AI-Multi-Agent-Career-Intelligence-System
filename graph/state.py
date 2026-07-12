@@ -16,4 +16,6 @@ class CareerState(TypedDict):
     market_analysis: dict
     interview_analysis: dict
     learning_roadmap: dict
+    cover_letter: dict
+
 

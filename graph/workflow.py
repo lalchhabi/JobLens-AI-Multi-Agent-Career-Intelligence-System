@@ -10,7 +10,8 @@ from graph.nodes import (
     gap_node,
     interview_node,
     roadmap_node,
-    market_node
+    market_node,
+    cover_letter_node
 )
 
 # Define StateGraph nodes and edges
@@ -22,6 +23,7 @@ builder.add_node("gap", gap_node)
 builder.add_node("interview", interview_node)
 builder.add_node("roadmap", roadmap_node)
 builder.add_node("market", market_node)
+builder.add_node("cover_letter",cover_letter_node)
 
 builder.add_edge(START, "parser")
 builder.add_edge("parser", "resume")
@@ -29,10 +31,12 @@ builder.add_edge("resume", "job")
 builder.add_edge("job", "gap")
 builder.add_edge("gap", "interview")
 builder.add_edge("gap", "market")
+builder.add_edge("gap", "cover_letter")
 
 builder.add_edge("interview", 'roadmap')
 builder.add_edge("market", 'roadmap')
 builder.add_edge("roadmap", END)
+builder.add_edge("cover_letter", END)
 
 career_graph = builder.compile()
 
