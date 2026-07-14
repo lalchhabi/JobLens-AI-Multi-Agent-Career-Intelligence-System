@@ -1,0 +1,104 @@
+/* ===================================
+   PRIMARY BUTTON
+=================================== */
+
+.primary-btn{
+
+    width:100%;
+
+    padding:15px 22px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    transition:all .25s ease;
+
+}
+
+.primary-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(79,70,229,.25);
+
+}
+
+.primary-btn:active{
+
+    transform:translateY(0);
+
+}
+
+.primary-btn:disabled{
+
+    opacity:.7;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+}
+
+
+/* ===================================
+   COPY BUTTON
+=================================== */
+
+.copy-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:12px 20px;
+
+    margin-top:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:linear-gradient(135deg,#6C4DFF,#8B5CF6);
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:0 8px 20px rgba(108,77,255,.25);
+
+}
+
+.copy-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 28px rgba(108,77,255,.35);
+
+}
+
+.copy-btn:active{
+
+    transform:scale(.97);
+
+}

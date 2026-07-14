@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =============================
-    // RESULT RENDERING (YOUR EXISTING LOGIC - IMPROVED ONLY SLIGHTLY)
+    // RESULT RENDERING
     // =============================
 
     function renderResults(data) {

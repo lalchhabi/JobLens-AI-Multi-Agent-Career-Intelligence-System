@@ -1,0 +1,154 @@
+/* ===================================
+   RESULT LAYOUT
+=================================== */
+
+.result-layout{
+
+    display:grid;
+
+    grid-template-columns:260px 1fr;
+
+    gap:30px;
+
+    align-items:start;
+
+}
+
+
+/* ===================================
+   SIDEBAR
+=================================== */
+
+.result-sidebar{
+
+    background:#ffffff;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    position:sticky;
+
+    top:20px;
+
+}
+
+
+/* Sidebar title */
+
+.result-sidebar::before{
+
+    content:"Analysis";
+
+    display:block;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    color:#6b7280;
+
+    margin-bottom:18px;
+
+    letter-spacing:1px;
+
+}
+
+
+/* ===================================
+   NAVIGATION BUTTONS
+=================================== */
+
+.nav-btn{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:15px 18px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:transparent;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#374151;
+
+    text-align:left;
+
+    transition:.25s;
+
+    margin-bottom:10px;
+
+}
+
+
+.nav-btn:hover{
+
+    background:#F3F0FF;
+
+    color:#6C4DFF;
+
+    transform:translateX(4px);
+
+}
+
+
+.nav-btn.active{
+
+    background:linear-gradient(135deg,#6C4DFF,#8B5CF6);
+
+    color:white;
+
+    box-shadow:0 8px 20px rgba(108,77,255,.25);
+
+}
+
+
+/* ===================================
+   RESULT CONTENT
+=================================== */
+
+.result-content{
+
+    min-height:650px;
+
+}
+
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:900px){
+
+    .result-layout{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .result-sidebar{
+
+        position:relative;
+
+        top:0;
+
+    }
+
+}

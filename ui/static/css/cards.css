@@ -1,0 +1,204 @@
+/* ===================================
+   CARD
+=================================== */
+
+.card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:28px;
+
+    margin-bottom:24px;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.08);
+
+    border:1px solid #ececec;
+
+}
+
+.card h2{
+
+    margin-bottom:22px;
+
+    color:#222;
+
+    font-size:26px;
+
+}
+
+.card h3{
+
+    margin-top:28px;
+
+    margin-bottom:14px;
+
+    color:#444;
+
+}
+
+.card h4{
+
+    margin-top:22px;
+
+    margin-bottom:10px;
+
+    color:#555;
+
+}
+
+.card p{
+
+    margin-bottom:14px;
+
+    line-height:1.7;
+
+}
+
+.card strong{
+
+    color:#222;
+
+}
+
+
+/* ===================================
+   SCORE BOX
+=================================== */
+
+.score-box{
+
+    background:#f7f8ff;
+
+    border-radius:14px;
+
+    padding:22px;
+
+    margin-bottom:30px;
+
+}
+
+
+/* ===================================
+   EXPERIENCE CARD
+=================================== */
+
+.experience-item{
+
+    background:#fafafa;
+
+    border-left:5px solid #6C4DFF;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+}
+
+.experience-item h4{
+
+    margin-bottom:6px;
+
+}
+
+.experience-item small{
+
+    display:block;
+
+    color:#6b7280;
+
+    margin-bottom:12px;
+
+}
+
+.experience-item ul{
+
+    margin-top:10px;
+
+}
+
+
+/* ===================================
+   PROJECT CARD
+=================================== */
+
+.project-item{
+
+    background:#fafafa;
+
+    border:1px solid #ececec;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+}
+
+.project-item h4{
+
+    margin-bottom:10px;
+
+}
+
+.project-item p{
+
+    margin-bottom:15px;
+
+}
+
+
+/* ===================================
+   EDUCATION
+=================================== */
+
+.education-item{
+
+    background:#fafafa;
+
+    border-radius:12px;
+
+    padding:18px;
+
+    margin-bottom:18px;
+
+}
+
+
+/* ===================================
+   COVER LETTER BOX
+=================================== */
+
+.letter-box{
+
+    background:#fafafa;
+
+    border:1px solid #ececec;
+
+    border-radius:14px;
+
+    padding:22px;
+
+    margin-top:15px;
+
+    margin-bottom:20px;
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+
+    line-height:1.8;
+
+    font-size:15px;
+
+    color:#374151;
+
+    max-height:450px;
+
+    overflow:auto;
+
+}

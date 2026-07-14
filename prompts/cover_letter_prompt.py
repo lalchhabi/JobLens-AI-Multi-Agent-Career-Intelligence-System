@@ -19,7 +19,7 @@ Guidelines:
 - If the candidate does not fully meet every requirement, emphasize transferable skills, relevant accomplishments, and a willingness to learn instead of fabricating qualifications.
 
 Length Guidelines:
-- Cover Letter: approximately 200–250 words.
+- Cover Letter: approximately 250–300 words.
 - Application Email: approximately 80–150 words.
 - LinkedIn Message: approximately 40–80 words.
 """

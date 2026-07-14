@@ -120,9 +120,6 @@ class GapAnalysisAgent:
             match_score=score,
         )
 
-        logger.info("LLM Gap Output:")
-        logger.info(llm_result.model_dump())
-
         logger.info("Gap analysis started")
         logger.info(f"Final prompt size: {len(prompt)} characters")
         logger.info(

@@ -1,77 +1,120 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>JobLens AI</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/css/animation.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+    <link rel="stylesheet" href="/static/css/cards.css">
+    <link rel="stylesheet" href="/static/css/forms.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/navigation.css">
+    <link rel="stylesheet" href="/static/css/result.css">
 </head>
 
 <body>
 
 <div class="app">
 
-    <!-- SIDEBAR (NOTION STYLE) -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <h2>🧠 JobLens AI</h2>
-
     </aside>
 
-    <!-- MAIN AREA -->
+    <!-- MAIN -->
     <main class="main">
 
-        <!-- HEADER -->
         <div class="header">
             <h1>AI Career Intelligence Engine</h1>
         </div>
 
-        <!-- INPUT SECTION -->
         <div class="input-section">
 
-            <!-- Resume -->
             <div class="card input-card">
+
                 <div class="card-header">
                     <h3>📄 Resume (.PDF)</h3>
                 </div>
 
                 <label class="upload-btn">
                     <input type="file" id="resume" hidden>
+
                     <div class="upload-content">
-                        <div>
-                            <strong>Click to upload</strong>
-                        </div>
+
+                    <div style="font-size:40px;">📄</div>
+
+                    <strong>Click to upload your resume</strong>
+
+                    <span>PDF only • Maximum 5 MB</span>
+
                     </div>
+
                 </label>
+
             </div>
 
-            <!-- Job Description -->
             <div class="card input-card">
+
                 <div class="card-header">
                     <h3>💼 Job Description</h3>
                 </div>
 
-                <textarea id="jobDescription"
-                    placeholder="Paste job description here..."></textarea>
+                <textarea
+                    id="jobDescription"
+                    placeholder="Paste job description here...">
+                </textarea>
+
             </div>
 
         </div>
 
-        <!-- ACTION BUTTON -->
         <div class="action">
-            <button id="analyzeBtn" class="primary-btn">
+
+            <button
+                id="analyzeBtn"
+                class="primary-btn">
+
                 🚀 Analyze Career Fit
+
             </button>
+
         </div>
 
-        <!-- RESULTS -->
         <div id="result" class="result">
+
             <div class="empty-state">
                 Results will appear here after analysis
             </div>
+
         </div>
 
     </main>
 
 </div>
 
-<script src="/static/script.js"></script>
+<!-- State -->
+<script src="/static/js/state.js"></script>
+
+<!-- UI -->
+<script src="/static/js/ui.js"></script>
+
+<!-- Renderers -->
+<script src="/static/js/renderers/resume.js"></script>
+<script src="/static/js/renderers/gap.js"></script>
+<script src="/static/js/renderers/interview.js"></script>
+<script src="/static/js/renderers/roadmap.js"></script>
+<script src="/static/js/renderers/market.js"></script>
+<script src="/static/js/renderers/coverletter.js"></script>
+
+<!-- API -->
+<script src="/static/js/api.js"></script>
+<!-- Navigation -->
+<script src="/static/js/navigation.js"></script>
+
+
+<!-- Main App -->
+<script src="/static/js/app.js"></script>
+
 </body>
 </html>
