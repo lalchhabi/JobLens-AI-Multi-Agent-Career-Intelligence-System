@@ -1,0 +1,166 @@
+/* ===================================
+   APP LAYOUT
+=================================== */
+
+.app{
+
+    display:flex;
+
+    min-height:100vh;
+
+    background:#f5f7fb;
+
+}
+
+
+/* ===================================
+   SIDEBAR
+=================================== */
+
+.sidebar{
+
+    width:220px;
+
+    background:#ffffff;
+
+    border-right:1px solid #e5e7eb;
+
+    padding:30px 20px;
+
+    position:sticky;
+
+    top:0;
+
+    height:100vh;
+
+}
+
+.sidebar h2{
+
+    font-size:22px;
+
+    color:#4f46e5;
+
+}
+
+
+/* ===================================
+   MAIN CONTENT
+=================================== */
+
+.main{
+
+    flex:1;
+
+    padding:40px;
+
+    max-width:1400px;
+
+}
+
+
+/* ===================================
+   HEADER
+=================================== */
+
+.header{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+}
+
+.header h1{
+
+    font-size:34px;
+
+    margin-bottom:8px;
+
+}
+
+.header p{
+
+    color:#6b7280;
+
+}
+
+
+/* ===================================
+   INPUT SECTION
+=================================== */
+
+.input-section{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+
+    margin-bottom:30px;
+
+}
+
+
+/* ===================================
+   BUTTON AREA
+=================================== */
+
+.action{
+
+    margin-bottom:35px;
+
+}
+
+
+/* ===================================
+   RESULT SECTION
+=================================== */
+
+.result{
+
+    margin-top:20px;
+
+}
+
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:900px){
+
+    .app{
+
+        flex-direction:column;
+
+    }
+
+    .sidebar{
+
+        width:100%;
+
+        height:auto;
+
+        position:relative;
+
+        border-right:none;
+
+        border-bottom:1px solid #e5e7eb;
+
+    }
+
+    .main{
+
+        padding:20px;
+
+    }
+
+    .input-section{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
