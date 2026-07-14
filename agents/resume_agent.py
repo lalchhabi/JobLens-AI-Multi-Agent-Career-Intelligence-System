@@ -46,6 +46,8 @@ class ResumeAgent:
 
         # Parse LLM output into structured Pydantic object
         result = self.parser.parse(response.content)
+
+        logger.info(f"Resume Result: {result}")
         return result
 
 
