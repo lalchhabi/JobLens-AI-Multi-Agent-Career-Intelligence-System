@@ -27,7 +27,7 @@ This system acts as a **personal AI career coach + recruiter assistant**:
 ### Input:
 
 * Resume (PDF)
-* Job Description (text / URL)
+* Job Description (text)
 
 ### Output:
 
@@ -38,6 +38,7 @@ This system acts as a **personal AI career coach + recruiter assistant**:
 * Interview questions
 * Job recommendations
 * Learning roadmap
+* Personalized cover letter, application email, linkedin outreach message.
 
 ---
 
@@ -94,52 +95,68 @@ This system acts as a **personal AI career coach + recruiter assistant**:
                                        ▼
                     ┌─────────────────────────────────────────────┐
                     │ Deterministic Scoring Engine (Backend)      │
-                    │ Required Skill Score                        │
-                    │ Preferred Skill Score                       │
-                    │ Overall Match Score                         │
+                    │ • Required Skill Score                      │
+                    │ • Preferred Skill Score                     │
+                    │ • Overall Match Score                       │
                     └─────────────────────────────────────────────┘
                                        │
-                  ┌────────────────────┼─────────────────────┐
-                  ▼                    ▼                     ▼
-      ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐
-      │ Interview Agent    │  │ Market Agent       │  │ Roadmap Agent       │
-      │ Personalized Q&A   │  │ Market Insights    │  │ Learning Roadmap    │
-      └────────────────────┘  │ Job Search Tool    │  └────────────────────┘
-                              └────────────────────┘
-                  └────────────────────┼─────────────────────┘
-                                       ▼
-                         ┌──────────────────────────────────┐
-                         │ Streaming JSON Response          │
-                         │ Resume Analysis                  │
-                         │ Job Analysis                     │
-                         │ Gap Analysis                     │
-                         │ Interview Questions              │
-                         │ Market Insights                  │
-                         │ Learning Roadmap                 │
-                         └──────────────────────────────────┘
+        ┌────────────────┬─────────────┼─────────────┬────────────────┐
+        ▼                ▼             ▼             ▼
+┌────────────────┐ ┌────────────────┐ ┌────────────────┐ ┌────────────────────┐
+│ Interview      │ │ Market         │ │ Roadmap        │ │ Cover Letter       │
+│ Agent          │ │ Agent          │ │ Agent          │ │ Agent              │
+│ Personalized   │ │ Market         │ │ Learning       │ │ Cover Letter       │
+│ Questions      │ │ Insights       │ │ Roadmap        │ │ Email              │
+│                │ │ Job Search     │ │                │ │ LinkedIn Message   │
+└────────────────┘ └────────────────┘ └────────────────┘ └────────────────────┘
+        └────────────────┬─────────────┼─────────────┬────────────────┘
+                         ▼
+           ┌──────────────────────────────────────────────┐
+           │ Streaming JSON Response                      │
+           │ • Resume Analysis                            │
+           │ • Job Analysis                               │
+           │ • Gap Analysis                               │
+           │ • Interview Questions                        │
+           │ • Market Insights                            │
+           │ • Learning Roadmap                           │
+           │ • Cover Letter                               │
+           │ • Application Email                          │
+           │ • LinkedIn Message                           │
+           └──────────────────────────────────────────────┘
+
 ```
+
 # LangGraph Workflow
 
 JobLens AI uses LangGraph to orchestrate the complete career intelligence pipeline.
 
 ```
 
-Parser
-   │
-Resume Agent
-   │
-Job Agent
-   │
-Gap Agent
-   │
- ├──────────────┐
- │              │
- ▼              ▼
-Interview     Market
- Agent         Agent
-      \       /
-       ▼     ▼
-     Roadmap Agent
+                Start
+                  │
+                  ▼
+                Parser
+                  │
+                  ▼
+                Resume
+                  │
+                  ▼
+                  Job
+                  │
+                  ▼
+                  Gap
+           ┌──────┼──────┐
+           │      │      │
+           ▼      ▼      ▼
+ Cover Letter  Interview  Market
+      │           │        │
+      │           └──┐  ┌──┘
+      │              ▼  ▼
+      │          Roadmap
+      │              │
+      └──────┬───────┘
+             ▼
+            End
 
 ```
 
@@ -222,7 +239,7 @@ Generates:
 
 ---
 
-## 5. Job Recommendation Agent (Optional Phase 2)
+## 5. Job Recommendation Agent 
 
 Suggests similar roles based on:
 
@@ -231,12 +248,20 @@ Suggests similar roles based on:
 
 ---
 
-## 6. Learning Roadmap Agent (Optional Phase 2)
+## 6. Learning Roadmap Agent 
 
 Generates:
 
 * 7–14 day structured learning plan
 * Skill-based roadmap
+
+### 6. Cover Letter Agent
+
+Generates:
+
+* Tailored cover letter
+* Professional application email
+* LinkedIn connection message
 
 ---
 
@@ -317,6 +342,7 @@ Generates:
 - Market insights and job recommendations
 - Real-time streaming analysis with FastAPI
 - Structured JSON outputs using Pydantic
+- Generate personalized cover letter, application email, linkedin outreach message
 - Dockerized deployment
 - GitHub Actions CI pipeline
 ---
@@ -387,12 +413,31 @@ joblens_AI/
 │   ├── pdf_parser.py
 │   ├── job_search_tool.py
 │ 
-├── ui/
-│   ├── static/
-│   │     ├── script.js
-│   │     ├── style.css
-│   ├── templates/
-│        ├── index.html
+ui/
+├── static/
+│   ├── css/
+│   │   ├── main.css
+│   │   ├── layout.css
+│   │   ├── navigation.css
+│   │   ├── cards.css
+│   │   ├── forms.css
+│   │   ├── buttons.css
+│   │   ├── result.css
+│   │   └── animation.css
+│   │
+│   └── js/
+│       ├── app.js
+│       ├── api.js
+│       ├── navigation.js
+│       ├── state.js
+│       ├── ui.js
+│       └── renderers/
+│           ├── resume.js
+│           ├── gap.js
+│           ├── interview.js
+│           ├── roadmap.js
+│           ├── market.js
+│           └── coverletter.js
 │ 
 ├── ui/
 │   ├── static/
@@ -472,6 +517,18 @@ uvicorn app.main:app --reload
 
 ---
 
+## 📨 Application Assistant
+
+JobLens AI helps candidates prepare job applications by automatically generating:
+
+- Personalized Cover Letter
+- Professional Application Email
+- LinkedIn Outreach Message
+
+Each document is generated based on both the candidate's resume and the target job description, making every application more personalized and relevant.
+
+---
+
 # 🧪 API Endpoints
 
 | Method | Endpoint | Description |
@@ -517,10 +574,9 @@ docker compose up --build
 ---
 
 # 📈 Future Improvements
-- **Job URL Analysis** – Automatically extract and analyze job descriptions directly from LinkedIn and company career pages.
 - **Resume Optimization** – Generate ATS-friendly resume suggestions tailored to specific job descriptions using RAG and LLMs.
 - **Conversation Memory** – Persist user career history and previous analyses to provide personalized long-term guidance.
 - **Interactive AI Career Coach** – Enable multi-turn conversations for resume reviews, interview preparation, and career planning.
 - **Multi-LLM Routing** – Dynamically route tasks to the most suitable model (Groq, OpenAI, Gemini, etc.) based on latency, cost, and capability.
 - **Analytics Dashboard** – Visualize skill gaps, match scores, interview readiness, and learning progress over time.
-- **Production Deployment** – Containerize the application with Docker and deploy on cloud platforms using CI/CD pipelines.
+
