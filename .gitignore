@@ -18,7 +18,12 @@ project_roadmap.md
 # test files 
 test.py
 
+#data
+data/
+
 # other files
 project_roadmap.md
 joblens-kwy.pem
 aws_deployment_guide.md
+
+
