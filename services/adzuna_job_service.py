@@ -34,13 +34,13 @@ class AdzunaService:
         results_per_page: Maximum number of job listings to retrieve.
 
     Returns:
-        A list of JobListing objects matching the search query.
+        A list of JobListingSchema objects matching the search query.
         """
 
         # Build the request
         url = (
             f"{self.BASE_URL}/"
-            f"{country}/search/1"
+            f"{country.lower()}/search/1"
         )
 
         # Build the parameters
@@ -93,41 +93,26 @@ class AdzunaService:
             A JobListingSchema object containing the normalized job information.
         """
 
+        company = job_data.get("company", {})
+        location = job_data.get("location", {})
+
         return JobListingSchema(
 
             title=job_data.get("title"),
 
-            company=job_data.get(
-                "company",
-                {}
-            ),
+            company=company.get("display_name"),
 
-            location=job_data.get(
-                "location",
-                {}
-            ),
+            location=location.get("display_name"),
 
-            description=job_data.get(
-                "description"
-            ),
+            description=job_data.get("description"),
 
-            apply_url=job_data.get(
-                "redirect_url"
-            ),
+            apply_url=job_data.get("redirect_url"),
 
-            salary_min=job_data.get(
-                "salary_min"
-            ),
+            created=job_data.get("created"),
 
-            salary_max=job_data.get(
-                "salary_max"
-            ),
+            salary_min=job_data.get("salary_min"),
 
-            contract_type=job_data.get(
-                "contract_type"
-            ),
+            salary_max=job_data.get("salary_max"),
 
-            created=job_data.get(
-                "created"
-            ),
+
         )
