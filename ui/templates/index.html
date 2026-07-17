@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>JobLens AI</title>
     <link rel="stylesheet" href="/static/css/animation.css">
     <link rel="stylesheet" href="/static/css/buttons.css">
@@ -10,23 +12,31 @@
     <link rel="stylesheet" href="/static/css/layout.css">
     <link rel="stylesheet" href="/static/css/main.css">
     <link rel="stylesheet" href="/static/css/navigation.css">
+    <link rel="stylesheet" href="/static/css/progress.css">
     <link rel="stylesheet" href="/static/css/result.css">
+    <link rel="stylesheet" href="/static/css/toast.css">
 </head>
 
 <body>
 
 <div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <h2>🧠 JobLens AI</h2>
-    </aside>
+    <!-- TOP BAR -->
+    <header class="topbar">
+        <span class="wordmark">JobLens</span>
+        <span class="label">AI Career Intelligence</span>
+    </header>
 
     <!-- MAIN -->
     <main class="main">
 
         <div class="header">
-            <h1>AI Career Intelligence Engine</h1>
+            <h1>Analyze your fit for a role</h1>
+            <p>
+                Upload a resume and paste the job description. Seven agents
+                assess your match, surface skill gaps, and draft your
+                application.
+            </p>
         </div>
 
         <div class="input-section">
@@ -34,19 +44,21 @@
             <div class="card input-card">
 
                 <div class="card-header">
-                    <h3>📄 Resume (.PDF)</h3>
+                    <h3>Resume</h3>
                 </div>
 
                 <label class="upload-btn">
-                    <input type="file" id="resume" hidden>
+                    <input
+                        type="file"
+                        id="resume"
+                        accept="application/pdf,.pdf"
+                        class="visually-hidden">
 
                     <div class="upload-content">
 
-                    <div style="font-size:40px;">📄</div>
+                    <strong id="uploadLabel">Choose a file</strong>
 
-                    <strong>Click to upload your resume</strong>
-
-                    <span>PDF only • Maximum 5 MB</span>
+                    <span>PDF · max 5 MB</span>
 
                     </div>
 
@@ -57,13 +69,12 @@
             <div class="card input-card">
 
                 <div class="card-header">
-                    <h3>💼 Job Description</h3>
+                    <h3>Job description</h3>
                 </div>
 
                 <textarea
                     id="jobDescription"
-                    placeholder="Paste job description here...">
-                </textarea>
+                    placeholder="Paste the full job description here…"></textarea>
 
             </div>
 
@@ -75,7 +86,7 @@
                 id="analyzeBtn"
                 class="primary-btn">
 
-                🚀 Analyze Career Fit
+                Analyze
 
             </button>
 
@@ -84,7 +95,7 @@
         <div id="result" class="result">
 
             <div class="empty-state">
-                Results will appear here after analysis
+                Your analysis will appear here.
             </div>
 
         </div>
@@ -101,6 +112,7 @@
 
 <!-- Renderers -->
 <script src="/static/js/renderers/resume.js"></script>
+<script src="/static/js/renderers/job.js"></script>
 <script src="/static/js/renderers/gap.js"></script>
 <script src="/static/js/renderers/interview.js"></script>
 <script src="/static/js/renderers/roadmap.js"></script>

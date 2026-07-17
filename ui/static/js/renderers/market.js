@@ -2,25 +2,26 @@ function renderMarket(market) {
 
     if (!market) return "";
 
+    const items = (list) =>
+        (list || [])
+            .map(item => `<li>${escapeHtml(item)}</li>`)
+            .join("");
+
     return `
     <div class="card">
 
-        <h2>🌍 Market Insights</h2>
+        <h2>Market insights</h2>
 
         <h4>Similar Roles</h4>
 
         <ul>
-            ${(market.similar_roles || [])
-                .map(r => `<li>${r}</li>`)
-                .join("")}
+            ${items(market.similar_roles)}
         </ul>
 
         <h4>Alternative Roles</h4>
 
         <ul>
-            ${(market.alternative_roles || [])
-                .map(r => `<li>${r}</li>`)
-                .join("")}
+            ${items(market.alternative_roles)}
         </ul>
 
         <h4>Trending Skills</h4>
@@ -28,7 +29,7 @@ function renderMarket(market) {
         <div class="tags">
 
             ${(market.trending_skills || [])
-                .map(s => `<span class="tag">${s}</span>`)
+                .map(s => `<span class="tag">${escapeHtml(s)}</span>`)
                 .join("")}
 
         </div>
@@ -37,7 +38,7 @@ function renderMarket(market) {
 
             <strong>Summary:</strong>
 
-            ${market.market_summary}
+            ${text(market.market_summary, "No summary available.")}
 
         </p>
 

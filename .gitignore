@@ -1,9 +1,15 @@
 
 # python cache files
 __pycache__
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
 
 # virtual environment
 job_agent/
+venv/
+.venv/
+env/
 
 # environment variables
 *.env
@@ -15,15 +21,29 @@ job_agent/
 # roadmap file
 project_roadmap.md
 
-# test files 
+# test files
 test.py
 
 #data
 data/
 
+# uploaded resumes
+uploads/
+
+# logs and databases
+*.log
+*.db
+*.sqlite3
+
+# IDE / editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
 # other files
 project_roadmap.md
 joblens-kwy.pem
 aws_deployment_guide.md
-
-

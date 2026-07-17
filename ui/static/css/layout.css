@@ -1,93 +1,129 @@
 /* ===================================
-   APP LAYOUT
+   APP SHELL
+
+   The old 220px sidebar held nothing but the wordmark. It's a top
+   bar now - same branding, 220px of content width back.
 =================================== */
 
 .app{
 
     display:flex;
 
-    min-height:100vh;
+    flex-direction:column;
 
-    background:#f5f7fb;
+    min-height:100vh;
 
 }
 
 
 /* ===================================
-   SIDEBAR
+   TOP BAR
 =================================== */
 
-.sidebar{
-
-    width:220px;
-
-    background:#ffffff;
-
-    border-right:1px solid #e5e7eb;
-
-    padding:30px 20px;
+.topbar{
 
     position:sticky;
 
     top:0;
 
-    height:100vh;
+    z-index:20;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    height:56px;
+
+    padding:0 24px;
+
+    background:var(--surface);
+
+    border-bottom:1px solid var(--line);
 
 }
 
-.sidebar h2{
+.wordmark{
 
-    font-size:22px;
+    font-size:15px;
 
-    color:#4f46e5;
+    font-weight:650;
+
+    letter-spacing:-.02em;
+
+    color:var(--ink);
+
+}
+
+.topbar .label{
+
+    padding-left:12px;
+
+    border-left:1px solid var(--line);
 
 }
 
 
 /* ===================================
-   MAIN CONTENT
+   MAIN
 =================================== */
 
 .main{
 
-    flex:1;
+    width:100%;
 
-    padding:40px;
+    max-width:1180px;
 
-    max-width:1400px;
+    margin:0 auto;
+
+    padding:32px 24px 72px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
 
 }
 
 
 /* ===================================
-   HEADER
+   PAGE HEADER
+
+   Left-aligned. A centred hero headline reads like a landing page,
+   not a tool you operate.
 =================================== */
 
 .header{
 
-    text-align:center;
+    display:flex;
 
-    margin-bottom:35px;
+    flex-direction:column;
+
+    gap:4px;
 
 }
 
 .header h1{
 
-    font-size:34px;
-
-    margin-bottom:8px;
+    font-size:24px;
 
 }
 
 .header p{
 
-    color:#6b7280;
+    margin:0;
+
+    color:var(--ink-4);
+
+    max-width:62ch;
 
 }
 
 
 /* ===================================
-   INPUT SECTION
+   INPUTS
 =================================== */
 
 .input-section{
@@ -96,31 +132,51 @@
 
     grid-template-columns:1fr 1fr;
 
-    gap:25px;
-
-    margin-bottom:30px;
+    gap:16px;
 
 }
 
 
 /* ===================================
-   BUTTON AREA
+   ACTION
 =================================== */
 
 .action{
 
-    margin-bottom:35px;
+    display:flex;
+
+    justify-content:flex-start;
 
 }
 
 
 /* ===================================
-   RESULT SECTION
+   RESULT
 =================================== */
 
 .result{
 
-    margin-top:20px;
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.empty-state{
+
+    background:var(--surface);
+
+    border:1px solid var(--line);
+
+    border-radius:var(--r-card);
+
+    padding:56px 24px;
+
+    text-align:center;
+
+    color:var(--ink-4);
 
 }
 
@@ -131,35 +187,27 @@
 
 @media(max-width:900px){
 
-    .app{
+    .topbar{
 
-        flex-direction:column;
-
-    }
-
-    .sidebar{
-
-        width:100%;
-
-        height:auto;
-
-        position:relative;
-
-        border-right:none;
-
-        border-bottom:1px solid #e5e7eb;
+        padding:0 16px;
 
     }
 
     .main{
 
-        padding:20px;
+        padding:20px 16px 56px;
 
     }
 
     .input-section{
 
         grid-template-columns:1fr;
+
+    }
+
+    .action .primary-btn{
+
+        width:100%;
 
     }
 

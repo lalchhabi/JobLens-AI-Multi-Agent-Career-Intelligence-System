@@ -1,0 +1,213 @@
+/* ===================================
+   STAGE RAIL
+
+   Mirrors the LangGraph pipeline in graph/workflow.py. Each stage
+   ticks over as its node reports on the SSE stream.
+=================================== */
+
+.stage-rail{
+
+    background:var(--surface);
+
+    border:1px solid var(--line);
+
+    border-radius:var(--r-card);
+
+    padding:16px 20px;
+
+    box-shadow:var(--shadow);
+
+}
+
+
+.stage-rail-head{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+    margin-bottom:14px;
+
+}
+
+.stage-rail-title{
+
+    font-family:var(--mono);
+
+    font-size:11px;
+
+    font-weight:600;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    color:var(--ink-4);
+
+    font-variant-numeric:tabular-nums;
+
+}
+
+
+/* ===================================
+   STAGES
+=================================== */
+
+.stages{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:6px;
+
+    list-style:none;
+
+    margin:0;
+
+    padding:0;
+
+}
+
+.stage{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:5px 11px;
+
+    border-radius:var(--r-pill);
+
+    border:1px solid var(--line);
+
+    background:var(--surface-2);
+
+    font-family:var(--mono);
+
+    font-size:11px;
+
+    font-weight:500;
+
+    letter-spacing:.01em;
+
+    color:var(--ink-5);
+
+    margin:0;
+
+    transition:color .2s ease,border-color .2s ease,background .2s ease;
+
+}
+
+.stage-dot{
+
+    width:5px;
+
+    height:5px;
+
+    border-radius:50%;
+
+    background:var(--ink-5);
+
+    opacity:.5;
+
+    flex:none;
+
+}
+
+
+/* Waiting on an upstream node */
+
+.stage.is-pending{
+
+    opacity:.55;
+
+}
+
+
+/* Dependencies satisfied, node in flight.
+   Carries a border and colour change as well as the pulse, so the
+   state survives prefers-reduced-motion. */
+
+.stage.is-running{
+
+    background:var(--accent-soft);
+
+    border-color:var(--accent-line);
+
+    color:var(--accent-ink);
+
+}
+
+.stage.is-running .stage-dot{
+
+    background:var(--accent);
+
+    opacity:1;
+
+    animation:stagePulse 1.4s ease-in-out infinite;
+
+}
+
+
+/* Node reported */
+
+.stage.is-done{
+
+    background:var(--ok-soft);
+
+    border-color:var(--ok-line);
+
+    color:var(--ok);
+
+}
+
+.stage.is-done .stage-dot{
+
+    background:var(--ok);
+
+    opacity:1;
+
+}
+
+
+/* Run failed before this node reported */
+
+.stage.is-stopped{
+
+    background:var(--surface-2);
+
+    border-color:var(--line-2);
+
+    color:var(--ink-5);
+
+    opacity:.5;
+
+}
+
+
+@keyframes stagePulse{
+
+    0%,100%{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+    50%{
+
+        transform:scale(1.5);
+
+        opacity:.45;
+
+    }
+
+}

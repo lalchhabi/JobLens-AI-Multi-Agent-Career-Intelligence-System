@@ -2,33 +2,32 @@ function renderInterview(interview) {
 
     if (!interview) return "";
 
+    const questions = (list) =>
+        (list || [])
+            .map(q => `<li>${escapeHtml(q)}</li>`)
+            .join("");
+
     return `
     <div class="card">
 
-        <h2>🎯 Interview Questions</h2>
+        <h2>Interview questions</h2>
 
         <h4>Technical</h4>
 
         <ul>
-            ${interview.technical_questions
-                .map(q => `<li>${q}</li>`)
-                .join("")}
+            ${questions(interview.technical_questions)}
         </ul>
 
         <h4>Behavioral</h4>
 
         <ul>
-            ${interview.behavioral_questions
-                .map(q => `<li>${q}</li>`)
-                .join("")}
+            ${questions(interview.behavioral_questions)}
         </ul>
 
         <h4>Project Based</h4>
 
         <ul>
-            ${interview.project_based_questions
-                .map(q => `<li>${q}</li>`)
-                .join("")}
+            ${questions(interview.project_based_questions)}
         </ul>
 
     </div>

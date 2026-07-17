@@ -1,36 +1,38 @@
 function renderResume(resume) {
 
+    if (!resume) return "";
+
     return `
     <div class="card">
 
-        <h2>📄 Resume Analysis</h2>
+        <h2>Resume</h2>
 
-        <h3>👤 Candidate Information</h3>
+        <h4>Candidate</h4>
 
-        <p><strong>Name:</strong> ${resume.name}</p>
+        <p><strong>Name:</strong> ${text(resume.name)}</p>
 
-        <p><strong>Email:</strong> ${resume.email}</p>
+        <p><strong>Email:</strong> ${text(resume.email)}</p>
 
 
-        <h3>💼 Experience</h3>
+        <h4>Experience</h4>
 
         ${(resume.experience || []).map(exp => `
 
         <div class="experience-item">
 
-            <h4>${exp.role}</h4>
+            <h4>${text(exp.role)}</h4>
 
             <p>
-                <strong>${exp.company}</strong>
+                <strong>${text(exp.company)}</strong>
             </p>
 
-            <small>${exp.duration}</small>
+            <small>${text(exp.duration, "Duration not listed")}</small>
 
             <ul>
 
                 ${(exp.responsibilities || [])
                     .slice(0,3)
-                    .map(item => `<li>${item}</li>`)
+                    .map(item => `<li>${escapeHtml(item)}</li>`)
                     .join("")}
 
             </ul>
@@ -40,30 +42,49 @@ function renderResume(resume) {
         `).join("")}
 
 
-        <h3>🛠 Skills</h3>
+        <h4>Skills</h4>
 
         <div class="tags">
 
             ${(resume.skills || []).map(skill => `
-                <span class="tag">${skill}</span>
+                <span class="tag">${escapeHtml(skill)}</span>
             `).join("")}
 
         </div>
 
 
-        <h3>🚀 Featured Projects</h3>
+        <h4>Projects</h4>
 
         ${(resume.projects || []).map(project => `
 
             <div class="project-item">
 
-                <h4>${project.name}</h4>
+                <h4>${text(project.name)}</h4>
 
                     <p>
 
-                        ${project.description}
+                        ${text(project.description, "No description provided")}
 
                     </p>
+
+            </div>
+
+        `).join("")}
+
+
+        <h4>Education</h4>
+
+        ${(resume.education || []).map(item => `
+
+            <div class="education-item">
+
+                <h4>${text(item.institution)}</h4>
+
+                <small>
+                    ${text(item.degree, "Degree not listed")}
+                    ·
+                    ${text(item.year, "Year not listed")}
+                </small>
 
             </div>
 

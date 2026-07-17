@@ -57,6 +57,17 @@ async function startStreaming(formData, callbacks) {
                         chunk.replace("data: ", "")
                     );
 
+                    // Two shapes reach us: {"type":"error","data":msg}
+                    // from career_analyze_stream(), and {"error":msg}
+                    // from the route's own handler.
+                    if (event.type === "error") {
+
+                        callbacks.onError?.(event.data);
+
+                        return;
+
+                    }
+
                     if (event.error) {
 
                         callbacks.onError?.(event.error);

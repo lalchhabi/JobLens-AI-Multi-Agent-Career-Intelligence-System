@@ -2,56 +2,55 @@ function renderCoverLetter(data) {
 
     if (!data) return "";
 
+    // Each block renders its text once, escaped, and the copy button
+    // points at it by id. The delegated handler in ui.js reads the text
+    // back off the DOM, so generated content never has to survive being
+    // embedded in an inline onclick attribute.
+    const block = (id, heading, body, copyLabel) => `
+
+        <h3 class="content-title">${heading}</h3>
+
+        <div class="letter-box" id="${id}">${escapeHtml(body)}</div>
+
+        <button
+            class="copy-btn"
+            type="button"
+            data-copy-from="${id}">
+
+            ${copyLabel}
+
+        </button>
+    `;
+
     return `
     <div class="card">
 
-        <h2>📨 Application Assistant</h2>
+        <h2>Application materials</h2>
 
-        <h3 class="content-title">📄 Cover Letter</h3>
-
-        <div class="letter-box">
-            ${data.full_cover_letter}
-        </div>
-
-        <button
-            class="copy-btn"
-            onclick="copyText(\`${data.full_cover_letter}\`)">
-
-            📋 Copy Cover Letter
-
-        </button>
+        ${block(
+            "coverLetterText",
+            "Cover letter",
+            data.full_cover_letter,
+            "Copy"
+        )}
 
         <hr class="divider">
 
-        <h3 class="content-title">📧 Application Email</h3>
-
-        <div class="letter-box">
-            ${data.application_email}
-        </div>
-
-        <button
-            class="copy-btn"
-            onclick="copyText(\`${data.application_email}\`)">
-
-            📋 Copy Email
-
-        </button>
+        ${block(
+            "applicationEmailText",
+            "Application email",
+            data.application_email,
+            "Copy"
+        )}
 
         <hr class="divider">
 
-        <h3 class="content-title">💼 LinkedIn Message</h3>
-
-        <div class="letter-box">
-            ${data.linkedin_message}
-        </div>
-
-        <button
-            class="copy-btn"
-            onclick="copyText(\`${data.linkedin_message}\`)">
-
-            📋 Copy LinkedIn Message
-
-        </button>
+        ${block(
+            "linkedinMessageText",
+            "LinkedIn message",
+            data.linkedin_message,
+            "Copy"
+        )}
 
     </div>
     `;

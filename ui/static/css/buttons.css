@@ -1,58 +1,60 @@
 /* ===================================
    PRIMARY BUTTON
+
+   Solid ink. The old violet gradient plus a translate-on-hover read
+   as decoration; a primary action should read as the firmest thing
+   on the page, which weight does better than colour.
 =================================== */
 
 .primary-btn{
 
-    width:100%;
+    min-width:180px;
 
-    padding:15px 22px;
+    padding:10px 20px;
 
-    border:none;
+    border:1px solid var(--ink);
 
-    border-radius:12px;
+    border-radius:var(--r-control);
 
     cursor:pointer;
 
-    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+    background:var(--ink);
 
-    color:#fff;
+    color:var(--on-ink);
 
-    font-size:16px;
+    font-family:inherit;
+
+    font-size:14px;
 
     font-weight:600;
 
-    transition:all .25s ease;
+    letter-spacing:-.006em;
+
+    transition:background .15s ease,border-color .15s ease;
 
 }
 
 .primary-btn:hover{
 
-    transform:translateY(-2px);
+    background:var(--ink-hover);
 
-    box-shadow:0 8px 20px rgba(79,70,229,.25);
-
-}
-
-.primary-btn:active{
-
-    transform:translateY(0);
+    border-color:var(--ink-hover);
 
 }
 
 .primary-btn:disabled{
 
-    opacity:.7;
+    background:var(--ink-5);
+
+    border-color:var(--ink-5);
 
     cursor:not-allowed;
-
-    transform:none;
 
 }
 
 
 /* ===================================
-   COPY BUTTON
+   SECONDARY / COPY BUTTON
 =================================== */
 
 .copy-btn{
@@ -61,44 +63,36 @@
 
     align-items:center;
 
-    justify-content:center;
+    gap:7px;
 
-    gap:8px;
+    padding:7px 13px;
 
-    padding:12px 20px;
+    border:1px solid var(--line);
 
-    margin-top:15px;
+    border-radius:var(--r-control);
 
-    border:none;
+    background:var(--surface);
 
-    border-radius:12px;
+    color:var(--ink-2);
 
-    background:linear-gradient(135deg,#6C4DFF,#8B5CF6);
+    font-family:inherit;
 
-    color:white;
-
-    font-size:14px;
+    font-size:12.5px;
 
     font-weight:600;
 
     cursor:pointer;
 
-    transition:.25s;
-
-    box-shadow:0 8px 20px rgba(108,77,255,.25);
+    transition:background .15s ease,border-color .15s ease;
 
 }
 
 .copy-btn:hover{
 
-    transform:translateY(-2px);
+    background:var(--surface-2);
 
-    box-shadow:0 12px 28px rgba(108,77,255,.35);
+    border-color:var(--ink-5);
 
-}
-
-.copy-btn:active{
-
-    transform:scale(.97);
+    color:var(--ink);
 
 }

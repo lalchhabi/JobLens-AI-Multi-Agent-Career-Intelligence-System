@@ -1,26 +1,91 @@
+// Keep in sync with validate_pdf() in utils/validators.py
+const MAX_RESUME_BYTES = 5 * 1024 * 1024;
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const btn = document.getElementById("analyzeBtn");
     const resumeInput = document.getElementById("resume");
     const jobInput = document.getElementById("jobDescription");
+    const uploadLabel = document.getElementById("uploadLabel");
+    const uploadBtn = resumeInput.closest(".upload-btn");
 
-    // Resume upload notification
+    function resetResumeInput() {
+
+        resumeInput.value = "";
+
+        // Matches the default in index.html
+        uploadLabel.innerText = "Choose a file";
+
+        uploadBtn.classList.remove("has-file");
+
+    }
+
+    // Resume selection: validate against the limits the card advertises
     resumeInput.addEventListener("change", () => {
 
-        if (resumeInput.files.length > 0) {
-            showToast(
-                `Resume uploaded: ${resumeInput.files[0].name}`,
-                "#2ecc71"
-            );
+        const file = resumeInput.files[0];
+
+        if (!file) {
+
+            resetResumeInput();
+
+            return;
+
         }
+
+        if (!file.name.toLowerCase().endsWith(".pdf")) {
+
+            showToast("Only PDF files are supported", "danger");
+
+            resetResumeInput();
+
+            return;
+
+        }
+
+        if (file.size > MAX_RESUME_BYTES) {
+
+            const size = (file.size / 1024 / 1024).toFixed(1);
+
+            showToast(
+                `Resume is ${size} MB — the limit is 5 MB`,
+                "danger"
+            );
+
+            resetResumeInput();
+
+            return;
+
+        }
+
+        // Persistent state, since the toast disappears after 2.5s
+        uploadLabel.innerText = file.name;
+
+        uploadBtn.classList.add("has-file");
+
+        showToast(`Resume added: ${file.name}`, "ok");
 
     });
 
-    // Job description notification
+    // Job description notification: fire once on crossing the threshold,
+    // not on every keystroke past it
+    let jobToastShown = false;
+
     jobInput.addEventListener("input", () => {
 
-        if (jobInput.value.trim().length > 20) {
-            showToast("Job description added ✔", "#2ecc71");
+        const hasContent = jobInput.value.trim().length > 20;
+
+        if (hasContent && !jobToastShown) {
+
+            showToast("Job description added", "ok");
+
+            jobToastShown = true;
+
+        }
+        else if (!hasContent) {
+
+            jobToastShown = false;
+
         }
 
     });
@@ -33,14 +98,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!resumeInput.files[0]) {
 
-            showToast("Please upload resume", "#e74c3c");
+            showToast("Add a resume to continue", "danger");
             return;
 
         }
 
         if (!jobInput.value.trim()) {
 
-            showToast("Please enter job description", "#e74c3c");
+            showToast("Add a job description to continue", "danger");
             return;
 
         }
@@ -49,7 +114,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Reset State
         // =============================
 
+        state.raw_resume = null;
         state.resume_analysis = null;
+        state.job_analysis = null;
         state.gap_analysis = null;
         state.interview_analysis = null;
         state.learning_roadmap = null;
@@ -59,6 +126,12 @@ document.addEventListener("DOMContentLoaded", () => {
         state.loading = true;
 
         setLoading(true);
+
+        // Mount the panel up front so the stage rail is visible from the
+        // first second, rather than leaving the user on the empty state
+        // until the first node reports
+        resetResultView();
+        renderNavigation(state);
 
         const formData = new FormData();
 
@@ -80,7 +153,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 onError(error) {
 
                     state.error = error;
-                    showToast(error, "#e74c3c");
+
+                    // startStreaming() stops on error and never reaches
+                    // onComplete, so loading has to be cleared here too
+                    state.loading = false;
+
+                    setLoading(false);
+
+                    showToast(error, "danger");
+
+                    renderNavigation(state);
 
                 },
 
@@ -90,10 +172,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     setLoading(false);
 
-                    showToast(
-                        "Analysis completed ✔",
-                        "#2ecc71"
-                    );
+                    // Don't report success over a failed run
+                    if (state.error) return;
+
+                    showToast("Analysis complete", "ok");
 
                 }
 
@@ -108,10 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setLoading(false);
 
-            showToast(
-                "Analysis failed",
-                "#e74c3c"
-            );
+            showToast("Analysis failed", "danger");
 
         }
 

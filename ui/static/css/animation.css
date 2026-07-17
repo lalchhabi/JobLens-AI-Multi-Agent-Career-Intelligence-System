@@ -1,16 +1,16 @@
 /* ===================================
-   FADE UP ANIMATION
+   MOTION
+
+   Deliberately minimal. Cards settle in as their agent reports;
+   everything else is a state change, not a performance.
+
+   Component transitions live with their components - only the
+   shared keyframes and the reduced-motion contract are here.
 =================================== */
-
-.fade-up{
-
-    animation:fadeUp .35s ease forwards;
-
-}
 
 .card{
 
-    animation:fadeUp .35s ease;
+    animation:fadeUp .3s ease;
 
 }
 
@@ -20,7 +20,7 @@
 
         opacity:0;
 
-        transform:translateY(15px);
+        transform:translateY(6px);
 
     }
 
@@ -36,59 +36,11 @@
 
 
 /* ===================================
-   FADE IN
+   REDUCED MOTION
+
+   Every state that animates also carries a colour or border change,
+   so nothing becomes unreadable when motion is switched off.
 =================================== */
-
-.fade-in{
-
-    animation:fadeIn .25s ease;
-
-}
-
-@keyframes fadeIn{
-
-    from{
-
-        opacity:0;
-
-    }
-
-    to{
-
-        opacity:1;
-
-    }
-
-}
-
-
-/* ===================================
-   BUTTON HOVER
-=================================== */
-
-button{
-
-    transition:all .25s ease;
-
-}
-
-
-/* ===================================
-   CARD HOVER
-=================================== */
-
-.card{
-
-    transition:transform .2s ease,
-               box-shadow .2s ease;
-
-}
-
-.card:hover{
-
-    transform:translateY(-2px);
-
-}
 
 @media (prefers-reduced-motion: reduce){
 

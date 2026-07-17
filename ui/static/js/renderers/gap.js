@@ -2,69 +2,113 @@ function renderGap(gap) {
 
     if (!gap) return "";
 
-    return `
-    <div class="card">
+    // match_score is Optional in GapSchema, so it can legitimately
+    // arrive as null - don't dereference it unguarded
+    const score = gap.match_score;
 
-        <h2>📊 Gap Analysis</h2>
+    // The matched/total counts are computed by scoring_engine.py and
+    // were never surfaced. Show the ratio behind each percentage, but
+    // only when both counts actually arrived.
+    const ratio = (matched, total) =>
+        Number.isFinite(matched) && Number.isFinite(total)
+            ? `<em>${matched}/${total}</em>`
+            : "";
 
+    const scoreBox = score
+        ? `
         <div class="score-box">
 
-            <h3>
-                Match Score:
-                ${gap.match_score.overall_score}%
-            </h3>
+            <div class="score-value">
 
-            <div class="progress">
+                <b>${score.overall_score}<span class="score-pct">%</span></b>
+
+                <span class="label">Overall match</span>
+
+            </div>
+
+            <div
+                class="progress"
+                role="progressbar"
+                aria-valuenow="${score.overall_score}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-label="Overall match score">
 
                 <div
                     class="bar"
-                    style="width:${gap.match_score.overall_score}%">
+                    style="width:${score.overall_score}%">
 
                 </div>
 
             </div>
 
-            <p>
-                <strong>Required Skills:</strong>
-                ${gap.match_score.required_skill_score}%
-            </p>
+            <div class="score-breakdown">
 
-            <p>
-                <strong>Preferred Skills:</strong>
-                ${gap.match_score.preferred_skill_score}%
-            </p>
+                <div class="score-metric">
+
+                    <span>Required</span>
+
+                    <b>${score.required_skill_score}%
+                       ${ratio(score.matched_required, score.total_required)}</b>
+
+                </div>
+
+                <div class="score-metric">
+
+                    <span>Preferred</span>
+
+                    <b>${score.preferred_skill_score}%
+                       ${ratio(score.matched_preferred, score.total_preferred)}</b>
+
+                </div>
+
+            </div>
 
         </div>
+        `
+        : `
+        <div class="score-box">
+
+            <p>Match score unavailable for this analysis.</p>
+
+        </div>
+        `;
+
+    const skillTags = (skills) =>
+        (skills || [])
+            .map(s => `<span class="tag">${escapeHtml(s)}</span>`)
+            .join("");
+
+    return `
+    <div class="card">
+
+        <h2>Gap analysis</h2>
+
+        ${scoreBox}
 
         <h4>Matched Required Skills</h4>
 
         <div class="tags green">
-            ${(gap.matched_required_skills || [])
-                .map(s => `<span class="tag">${s}</span>`)
-                .join("")}
+            ${skillTags(gap.matched_required_skills)}
         </div>
 
         <h4>Missing Required Skills</h4>
 
         <div class="tags red">
-            ${(gap.missing_required_skills || [])
-                .map(s => `<span class="tag">${s}</span>`)
-                .join("")}
+            ${skillTags(gap.missing_required_skills)}
         </div>
 
         <h4>Matched Preferred Skills</h4>
 
         <div class="tags blue">
-            ${(gap.matched_preferred_skills || [])
-                .map(s => `<span class="tag">${s}</span>`)
-                .join("")}
+            ${skillTags(gap.matched_preferred_skills)}
         </div>
 
         <h4>Learning Recommendations</h4>
 
         <ul>
             ${(gap.learning_recommendation || [])
-                .map(r => `<li>${r}</li>`)
+                .map(r => `<li>${escapeHtml(r)}</li>`)
                 .join("")}
         </ul>
 

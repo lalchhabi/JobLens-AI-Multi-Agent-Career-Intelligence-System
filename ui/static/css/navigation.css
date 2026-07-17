@@ -6,9 +6,9 @@
 
     display:grid;
 
-    grid-template-columns:260px 1fr;
+    grid-template-columns:212px 1fr;
 
-    gap:30px;
+    gap:20px;
 
     align-items:start;
 
@@ -16,51 +16,39 @@
 
 
 /* ===================================
-   SIDEBAR
+   TAB SIDEBAR
 =================================== */
 
 .result-sidebar{
 
-    background:#ffffff;
+    display:flex;
 
-    border-radius:18px;
+    flex-direction:column;
 
-    padding:20px;
+    gap:2px;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    background:var(--surface);
+
+    border:1px solid var(--line);
+
+    border-radius:var(--r-card);
+
+    padding:8px;
+
+    box-shadow:var(--shadow);
 
     position:sticky;
 
-    top:20px;
-
-}
-
-
-/* Sidebar title */
-
-.result-sidebar::before{
-
-    content:"Analysis";
-
-    display:block;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    text-transform:uppercase;
-
-    color:#6b7280;
-
-    margin-bottom:18px;
-
-    letter-spacing:1px;
+    top:72px;
 
 }
 
 
 /* ===================================
-   NAVIGATION BUTTONS
+   TABS
+
+   Active state is a solid ink fill. No gradient, no slide-on-hover:
+   a nav item that moves under the cursor reads as a toy.
 =================================== */
 
 .nav-btn{
@@ -71,62 +59,118 @@
 
     align-items:center;
 
-    gap:12px;
+    gap:10px;
 
-    padding:15px 18px;
+    padding:8px 10px;
 
     border:none;
 
-    border-radius:14px;
+    border-radius:6px;
 
     background:transparent;
 
     cursor:pointer;
 
-    font-size:15px;
+    font-family:inherit;
 
-    font-weight:600;
+    font-size:13.5px;
 
-    color:#374151;
+    font-weight:550;
+
+    color:var(--ink-3);
 
     text-align:left;
 
-    transition:.25s;
-
-    margin-bottom:10px;
+    transition:background .12s ease,color .12s ease;
 
 }
-
 
 .nav-btn:hover{
 
-    background:#F3F0FF;
+    background:var(--surface-2);
 
-    color:#6C4DFF;
-
-    transform:translateX(4px);
+    color:var(--ink);
 
 }
 
-
 .nav-btn.active{
 
-    background:linear-gradient(135deg,#6C4DFF,#8B5CF6);
+    background:var(--ink);
 
-    color:white;
+    color:var(--on-ink);
 
-    box-shadow:0 8px 20px rgba(108,77,255,.25);
+}
+
+.nav-btn:focus-visible{
+
+    outline:2px solid var(--accent);
+
+    outline-offset:-1px;
 
 }
 
 
 /* ===================================
-   RESULT CONTENT
+   TAB READY INDICATOR
+
+   Shows at a glance which agents have reported while the rest of
+   the pipeline is still running.
+=================================== */
+
+.nav-btn-title{
+
+    flex:1;
+
+}
+
+.nav-btn-state{
+
+    width:5px;
+
+    height:5px;
+
+    border-radius:50%;
+
+    background:var(--ink-5);
+
+    opacity:.45;
+
+    flex:none;
+
+}
+
+.nav-btn.is-ready .nav-btn-state{
+
+    background:var(--ok);
+
+    opacity:1;
+
+}
+
+.nav-btn.active .nav-btn-state{
+
+    background:var(--on-ink);
+
+    opacity:.35;
+
+}
+
+.nav-btn.active.is-ready .nav-btn-state{
+
+    background:var(--ok);
+
+    opacity:1;
+
+}
+
+
+/* ===================================
+   CONTENT
 =================================== */
 
 .result-content{
 
-    min-height:650px;
+    min-height:520px;
 
 }
 
@@ -148,6 +192,24 @@
         position:relative;
 
         top:0;
+
+        flex-direction:row;
+
+        overflow-x:auto;
+
+    }
+
+    .nav-btn{
+
+        width:auto;
+
+        white-space:nowrap;
+
+    }
+
+    .result-content{
+
+        min-height:0;
 
     }
 
