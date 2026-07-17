@@ -6,9 +6,6 @@ Analyze the candidate's market opportunities using the provided candidate contex
 CANDIDATE CONTEXT:
 {market_context}
 
-AVAILABLE JOBS:
-{jobs}
-
 OUTPUT FORMAT:
 {format_instructions}
 

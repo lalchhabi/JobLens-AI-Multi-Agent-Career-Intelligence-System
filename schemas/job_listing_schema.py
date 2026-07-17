@@ -3,6 +3,9 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 class JobListingSchema(BaseModel):
+    """Standardized job listing returned by external job providers.
+    This schema represents the normalized job information used throughout the Joblens application regardless of the underlying job provider (e.g. Adzuna, Linkedin, Jooble)
+    """
 
     title: str = Field(
         description = "Job title advertised by the employer.")
@@ -24,6 +27,11 @@ class JobListingSchema(BaseModel):
         description="Direct URL where the candidate can view or apply for the job."
     )
 
+    created: Optional[str] = Field(
+        default=None,
+        description="Date when the job was posted."
+    )
+
     salary_min: Optional[int] = Field(
         default=None,
         description="Minimum annual salary offered for the position, if available."
@@ -34,12 +42,3 @@ class JobListingSchema(BaseModel):
         description="Maximum annual salary offered for the position, if available."
     )
 
-    contract_type: Optional[str] = Field(
-        default=None,
-        description="Employment type such as Full-time, Part-time, or Contract."
-    )
-
-    created: Optional[str] = Field(
-        default=None,
-        description="Date when the job was posted."
-    )

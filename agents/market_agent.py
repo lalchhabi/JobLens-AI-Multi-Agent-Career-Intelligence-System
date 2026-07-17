@@ -43,6 +43,7 @@ class MarketAgent:
         without sacrificing recommendation quality.
 
         """
+
         # Step 1: Get Jobs from tool
         jobs = self.job_tool.search_similar_roles(
             target_role=job_analysis['title'],
@@ -72,10 +73,12 @@ class MarketAgent:
 
         # STEP 3: Build prompt
         prompt = MARKET_PROMPT.format(
+
         market_context=market_context,
         jobs=json.dumps(jobs, indent=2),
         format_instructions=self.parser.get_format_instructions()
-    )
+
+        )
 
         # STEP 4: LLM call
         # Call the LLM model
