@@ -18,7 +18,7 @@ class JobListingSchema(BaseModel):
         description = "Job Location including city, state or country."
     )
 
-    description: str = Field(
+    job_description: str = Field(
         description = "Full job description provided in the job advertisement."
 
     )
