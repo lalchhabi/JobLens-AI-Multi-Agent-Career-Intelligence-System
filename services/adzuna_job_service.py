@@ -104,7 +104,7 @@ class AdzunaService:
 
             location=location.get("display_name"),
 
-            description=job_data.get("description"),
+            job_description=job_data.get("description"),
 
             apply_url=job_data.get("redirect_url"),
 
