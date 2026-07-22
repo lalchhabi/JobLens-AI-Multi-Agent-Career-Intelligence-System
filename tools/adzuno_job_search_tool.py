@@ -39,18 +39,23 @@ def search_jobs(
         results_per_page=results_per_page
     )
 
+    MAX_DESCRIPTION_LENGTH = 120
+
     
     # Return job listings with a shortened description
+    MAX_DESCRIPTION_LENGTH = 150
+
     return [
         {
-            **job.model_dump(),
-
-            # Limit the job description to the first 300 characters to reduce LLM token usage while still providing enough context about the role.
-            "description": (
-                job.description[:300] + "..."
-                if len(job.description) > 300
-                else job.description
+            "title": job.title,
+            "company": job.company,
+            "location": job.location,
+            "job_description": (
+                job.job_description[:MAX_DESCRIPTION_LENGTH] + "..."
+                if len(job.job_description) > MAX_DESCRIPTION_LENGTH
+                else job.job_description
             ),
+            "apply_url": job.apply_url
         }
         for job in jobs
     ]
