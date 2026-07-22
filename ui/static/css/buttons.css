@@ -96,3 +96,33 @@
     color:var(--ink);
 
 }
+
+.job-apply-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    border:1px solid var(--border-color);
+
+    transition:.25s;
+
+}
+
+.job-apply-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+

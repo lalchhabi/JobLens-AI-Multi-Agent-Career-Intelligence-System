@@ -76,6 +76,8 @@ class CoverLetterAgent:
                 ),
             ]
 
+            logger.info(f"Cover letter prompt length: {len(prompt)}")
+
             # Call LLM 
             response = safe_llm_call(
                 lambda: self.llm.invoke(prompt),

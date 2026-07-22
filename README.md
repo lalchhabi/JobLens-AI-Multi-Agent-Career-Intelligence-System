@@ -438,12 +438,7 @@ ui/
 │           ├── roadmap.js
 │           ├── market.js
 │           └── coverletter.js
-│ 
-├── ui/
-│   ├── static/
-│   │     ├── script.js
-│   │     ├── style.css
-│   ├── templates/
+├── templates/
 │        ├── index.html
 │ 
 ├── uploads/

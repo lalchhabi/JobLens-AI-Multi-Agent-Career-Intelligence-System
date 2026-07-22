@@ -43,4 +43,4 @@ class MarketSchema(BaseModel):
         default_factory = list,
         description="Most frequently requested skills across the retrieved live job listings."
     )
-    market_summary: str = Field(description = "Overall summary of market opportunities and hiring trends")
+

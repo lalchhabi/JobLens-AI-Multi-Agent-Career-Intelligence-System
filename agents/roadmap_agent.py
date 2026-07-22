@@ -59,6 +59,8 @@ class RoadmapAgent():
             format_instructions = self.parser.get_format_instructions()
         )
 
+        print(f"Roadmap Agent prompt length: {len(prompt)}")
+
         # Call the model and generate the response
         response = safe_llm_call(
         lambda: self.llm.invoke(prompt),

@@ -26,11 +26,12 @@ class ResumeAgent:
         "Parse raw resume text into a structured ResumeSchema object."
 
         # Build final prompt with resume text and schema rules
-        format_instructions = self.parser.get_format_instructions()
         prompt = RESUME_PROMPT.format(
             output_format = RESUME_OUTPUT_FORMAT,
             resume_text = resume_text
         )
+
+        logger.info(f"Resume Agent prompt length: {len(prompt)}")
 
         logger.info("Resume Agent Prompt Profile")
         logger.info(f"Prompt         : {len(RESUME_PROMPT)}")
