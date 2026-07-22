@@ -91,7 +91,7 @@ class InterviewAgent:
         )
 
         logger.info("Interview Agent Prompt Profile")
-        logger.info(f"Final Prompt          : {len(prompt)}")
+        logger.info(f"Interview Agent Prompt          : {len(prompt)}")
 
         # Call the LLM model to generate interview questions
         response = safe_llm_call(

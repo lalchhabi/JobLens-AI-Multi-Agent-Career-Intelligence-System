@@ -70,6 +70,8 @@ class GapAnalysisAgent:
             format_instructions = FORMAT_INSTRUCTIONS
             )
         
+        logger.info(f"Gap Agent prompt length: {len(prompt)}")
+        
         # Call LLM 
         response = safe_llm_call(
             lambda: self.llm.invoke(prompt),
