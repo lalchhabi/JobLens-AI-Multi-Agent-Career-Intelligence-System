@@ -130,6 +130,8 @@ class MarketAgent:
             jobs=json.dumps(compact_jobs, indent=2)
         )
 
+        logger.info(f"Market agent prompt length: {len(prompt)}")
+
         
         # Step 6: Generate market analysis
         response = safe_llm_call(
@@ -141,20 +143,15 @@ class MarketAgent:
         logger.info("Market Agent Response:")
         logger.info(response.content)
 
-        
         # Step 7: Parse LLM response
-        analysis = json.loads(response.content)
+        analysis = self.parser.parse(response.content)
 
-        print(f"Final Analysis {analysis}")
-
-        
         # Step 8: Build the final MarketSchema
         return MarketSchema(
             live_jobs=live_jobs,
-            similar_roles=analysis.get("similar_roles", []),
-            alternative_roles=analysis.get("alternative_roles", []),
-            trending_skills=analysis.get("trending_skills", []),
-            market_summary=analysis.get("market_summary", "")
+            similar_roles=analysis.similar_roles,
+            alternative_roles=analysis.alternative_roles,
+            trending_skills=analysis.trending_skills
         )
 
 
