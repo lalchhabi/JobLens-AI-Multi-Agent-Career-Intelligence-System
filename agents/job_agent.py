@@ -2,7 +2,7 @@
 from langchain_core.output_parsers import PydanticOutputParser
 
 # Import project files 
-from prompts.job_prompt import JOB_PROMPT
+from prompts.job_prompt import JOB_PROMPT, JOB_OUTPUT_FORMAT
 from services.llm_service import get_llm_model
 from schemas.job_schema import JobSchema
 from utils.llm_retry import safe_llm_call
@@ -30,9 +30,10 @@ class JobAgent:
         
         # Finalize prompt
         prompt = JOB_PROMPT.format(
-            format_instructions = self.parser.get_format_instructions(),
+            output_format = JOB_OUTPUT_FORMAT,
             job_description = job_description
         )
+
 
         # Call the LLM model
         response = safe_llm_call(
