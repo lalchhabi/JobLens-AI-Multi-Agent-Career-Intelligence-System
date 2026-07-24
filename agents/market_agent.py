@@ -72,7 +72,6 @@ class MarketAgent:
             agent_name=self.agent_name,
         )
 
-        logger.info("Market Agent Response:")
         logger.info(response.content)
 
         # Step 5: Parse and validate the response
