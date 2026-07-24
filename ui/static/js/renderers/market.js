@@ -1,3 +1,17 @@
+function formatPostedDate(dateString) {
+
+    if (!dateString) return "Unknown";
+
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+    });
+
+}
+
 function renderJobs(jobs) {
 
         if (!jobs || jobs.length === 0) {
@@ -33,16 +47,33 @@ function renderJobs(jobs) {
                                 📍 ${text(job.location)}
                             </div>
 
-                            ${job.salary
-                                ? `
-                                    <div class="job-item">
-                                        💰 ${escapeHtml(job.salary)}
-                                    </div>
-                                `
-                                : ""
+                            <div class="job-item">
+                                Posted • ${formatPostedDate(job.created)}
+                            </div>
+
+                            ${
+                                job.salary_min || job.salary_max
+                                    ? `
+                                        <div class="job-item">
+                                            💰 ${job.salary_min ?? "?"}
+                                            ${
+                                                job.salary_max
+                                                    ? " - " + job.salary_max
+                                                    : ""
+                                            }
+                                        </div>
+                                    `
+                                    : ""
                             }
 
                         </div>
+                        <p class="job-description">
+                            ${
+                                job.job_description.length > 180
+                                    ? text(job.job_description.slice(0, 180)) + "..."
+                                    : text(job.job_description)
+                            }
+                        </p>
 
                         <div class="job-footer">
 
@@ -135,30 +166,63 @@ function renderMarket(market) {
 
                 <h3>Live Job Search</h3>
 
-                <div class="job-search-controls">
+                <div class="job-search-panel">
 
-                    <select
-                        id="countrySelect"
-                        class="job-country-select">
+                    <div class="search-title">
 
-                        <option value="au">Australia</option>
-                        <option value="ca">Canada</option>
-                        <option value="gb">United Kingdom</option>
-                        <option value="us">United States</option>
-                        <option value="sg">Singapore</option>
-                        <option value="nz">New Zealand</option>
-                        <option value="in">India</option>
+                        🔍 Search Live Jobs
 
-                    </select>
+                    </div>
 
-                    <button
-                        id="searchJobsBtn"
-                        class="job-apply-btn"
-                        type="button">
+                    <div class="search-subtitle">
 
-                        Search Jobs
+                        Find current openings from different countries.
 
-                    </button>
+                    </div>
+
+                    <div class="job-search-controls">
+
+                        <div class="search-field">
+
+                            <label for="countrySelect">
+                                Country
+                            </label>
+
+                            <select id="countrySelect">
+
+                                <option value="au" selected>Australia</option>
+                                <option value="at">Austria</option>
+                                <option value="be">Belgium</option>
+                                <option value="br">Brazil</option>
+                                <option value="ca">Canada</option>
+                                <option value="fr">France</option>
+                                <option value="de">Germany</option>
+                                <option value="in">India</option>
+                                <option value="it">Italy</option>
+                                <option value="mx">Mexico</option>
+                                <option value="nl">Netherlands</option>
+                                <option value="nz">New Zealand</option>
+                                <option value="pl">Poland</option>
+                                <option value="sg">Singapore</option>
+                                <option value="za">South Africa</option>
+                                <option value="es">Spain</option>
+                                <option value="ch">Switzerland</option>
+                                <option value="gb">United Kingdom</option>
+                                <option value="us">United States</option>
+
+                            </select>
+
+                        </div>
+
+                        <button
+                            id="searchJobsBtn"
+                            class="job-search-btn">
+
+                            Search Jobs
+
+                        </button>
+
+                    </div>
 
                 </div>
   
@@ -194,6 +258,12 @@ document.addEventListener("click", async (event) => {
 
     const country =
         document.getElementById("countrySelect").value;
+    
+    const countryName =
+        document.getElementById("countrySelect")
+            .options[
+                document.getElementById("countrySelect").selectedIndex
+            ].text;
 
     // Current target role from analysis
     const role = state.job_analysis?.title;
@@ -211,7 +281,8 @@ document.addEventListener("click", async (event) => {
 
     jobsContainer.innerHTML = `
         <div class="empty-card">
-            Searching jobs...
+            <div class="spinner"></div>
+            Searching live jobs...
         </div>
     `;
 
@@ -236,11 +307,26 @@ document.addEventListener("click", async (event) => {
 
         if (!response.ok) {
 
-            throw new Error("Failed to search jobs.");
+            const error = await response.json();
+
+            throw new Error(error.detail);
 
         }
 
         const jobs = await response.json();
+
+        const jobsContainer = document.getElementById("jobsContainer");
+
+        if (!jobs || jobs.length === 0) {
+            jobsContainer.innerHTML = `
+                <div class="empty-card">
+                    <h4>No jobs found</h4>
+                    <p>No matching jobs were found for <strong>${countryName}</strong>.</p>
+                    <p>Try another country.</p>
+                </div>
+            `;
+            return;
+        }
 
         jobsContainer.innerHTML = renderJobs(jobs);
 
@@ -251,7 +337,7 @@ document.addEventListener("click", async (event) => {
 
         jobsContainer.innerHTML = `
             <div class="empty-card">
-                Unable to load jobs.
+                ${err.message}
             </div>
         `;
 
