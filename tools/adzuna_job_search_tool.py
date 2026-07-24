@@ -10,7 +10,7 @@ service = AdzunaService()
 def search_jobs(
     query: str,
     country: str,
-    results_per_page: int = 5
+    results_per_page: int = 10
 ):
     """
     Search live job listings.

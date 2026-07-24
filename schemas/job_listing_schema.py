@@ -32,12 +32,12 @@ class JobListingSchema(BaseModel):
         description="Date when the job was posted."
     )
 
-    salary_min: Optional[int] = Field(
+    salary_min: Optional[float] = Field(
         default=None,
         description="Minimum annual salary offered for the position, if available."
     )
 
-    salary_max: Optional[int] = Field(
+    salary_max: Optional[float] = Field(
         default=None,
         description="Maximum annual salary offered for the position, if available."
     )

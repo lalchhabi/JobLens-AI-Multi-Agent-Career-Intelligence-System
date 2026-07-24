@@ -524,3 +524,60 @@
     opacity:.7;
 
 }
+
+.job-description {
+    margin: 14px 0;
+    color: #b8b8b8;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.job-search-panel{
+    margin:20px 0 28px;
+    padding:20px;
+    border:1px solid #2d323c;
+    border-radius:12px;
+    background:#1d2128;
+}
+
+.search-title{
+    font-size:1.1rem;
+    font-weight:600;
+    color:#ffffff;
+}
+
+.search-subtitle{
+    margin-top:6px;
+    margin-bottom:18px;
+    color:#9da5b4;
+    font-size:0.9rem;
+}
+
+.job-search-controls{
+    display:flex;
+    align-items:end;
+    gap:16px;
+    flex-wrap:wrap;
+}
+
+.search-field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.search-field label{
+    font-size:.82rem;
+    color:#a7afbd;
+    font-weight:600;
+}
+
+.search-field select{
+    min-width:220px;
+    padding:10px 14px;
+    border-radius:8px;
+    border:1px solid #353b46;
+    background:#252a33;
+    color:white;
+}
+

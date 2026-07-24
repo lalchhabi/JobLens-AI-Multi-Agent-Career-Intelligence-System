@@ -3,7 +3,10 @@ from dotenv import load_dotenv
 import os
 import requests
 from schemas.job_listing_schema import JobListingSchema
+from utils.logger import get_logger
 
+# Initialize logger
+logger = get_logger(__name__)
 
 # Load Environment variables
 load_dotenv()
@@ -23,7 +26,7 @@ class AdzunaService:
             self,
             query:str,
             country:str,
-            results_per_page: int = 5
+            results_per_page: int = 10
     )-> list[JobListingSchema]:
         """
         Search for job listings from the Adzuna API.
@@ -60,7 +63,11 @@ class AdzunaService:
 
         # Check for wrrors
         if response.status_code != 200:
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except requests.HTTPError:
+                logger.warning("Adzuna request failed.")
+                return []
 
         # Parse the JSON
         data = response.json()
@@ -98,15 +105,15 @@ class AdzunaService:
 
         return JobListingSchema(
 
-            title=job_data.get("title"),
+            title=job_data.get("title") or "Untitled Job",
 
-            company=company.get("display_name"),
+            company=company.get("display_name") or "Unknown Company",
 
-            location=location.get("display_name"),
+            location=location.get("display_name") or "Unknown Location",
 
-            job_description=job_data.get("description"),
+            job_description=job_data.get("description") or "No description available",
 
-            apply_url=job_data.get("redirect_url"),
+            apply_url=job_data.get("redirect_url") or "No URL available",
 
             created=job_data.get("created"),
 

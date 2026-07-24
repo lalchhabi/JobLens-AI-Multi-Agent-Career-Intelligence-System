@@ -265,6 +265,83 @@ Generates:
 
 ---
 
+## 📨 Application Assistant
+
+JobLens AI helps candidates prepare job applications by automatically generating:
+
+- Personalized Cover Letter
+- Professional Application Email
+- LinkedIn Outreach Message
+
+Each document is generated based on both the candidate's resume and the target job description, making every application more personalized and relevant.
+
+---
+
+# 🧪 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/upload-resume` | Uploads a resume PDF for processing. |
+| POST | `/analyze-job` | Analyzes a job description and extracts structured requirements. |
+| POST | `/analyze-stream` | Executes the complete LangGraph multi-agent workflow and streams results to the frontend in real time. |
+---
+
+# 💼 Live Job Search
+
+JobLens AI includes a real-time job search feature that lets users explore current job openings without using the LLM. This keeps searches fast, reduces token usage, and always returns the latest opportunities from the job provider.
+
+## Architecture
+
+```
+User
+   │
+   ▼
+Select Country
+   │
+   ▼
+Frontend (JavaScript)
+   │
+   ▼
+FastAPI Endpoint
+   │
+   ▼
+Adzuna Jobs API
+   │
+   ▼
+Display Live Jobs
+```
+
+## Design
+During the initial implementation, live job retrieval was integrated into the Market Agent using LangChain tool calling and a custom Tool Executor. While this successfully demonstrated agent-tool interaction, it was later replaced with a dedicated FastAPI endpoint for production use.
+
+The feature was redesigned so that:
+
+- Market Agent generates AI-powered market insights only.
+- Live job search uses a dedicated FastAPI endpoint.
+- Jobs are fetched directly from the Adzuna Jobs API.
+- No LLM tokens are consumed during job searches.
+
+This design provides:
+- Faster response time
+- Real-time job listings
+- Lower infrastructure cost
+- Better user experience
+
+## Features
+
+- Search AI jobs across multiple countries
+- Real-time job listings
+- Job title, company, location, salary (if available)
+- Posted date
+- Short job description
+- Direct Apply link
+
+## Supported Countries
+
+Australia • Austria • Belgium • Brazil • Canada • France • Germany • India • Italy • Mexico • Netherlands • New Zealand • Poland • Singapore • South Africa • Spain • Switzerland • United Kingdom • United States
+
+
+
 # 🧰 Tech Stack
 
 ## Backend
@@ -343,6 +420,7 @@ Generates:
 - Real-time streaming analysis with FastAPI
 - Structured JSON outputs using Pydantic
 - Generate personalized cover letter, application email, linkedin outreach message
+- Live Job Search across multiple countries
 - Dockerized deployment
 - GitHub Actions CI pipeline
 ---
@@ -406,12 +484,14 @@ joblens_AI/
 │   ├── context_builder.py
 │   ├── llm_service.py
 │   ├── scoring_engine.py
+│   ├── adzuna_job_service.py
 │
 ├── tests/
 │
 ├── tools/
 │   ├── pdf_parser.py
-│   ├── job_search_tool.py
+│   ├── adzuno_job_search_tool.py
+│   ├── tool_executor.py
 │ 
 ui/
 ├── static/
@@ -500,6 +580,8 @@ Create `.env`
 ```env
 HUGGINGFACEHUB_ACCESS_TOKEN=your_token
 GROQ_API_KEY=your_key
+ADZUNA_APP_ID=your_app_id
+ADZUNA_APP_KEY=your_app_key
 ```
 
 ---
@@ -510,27 +592,6 @@ GROQ_API_KEY=your_key
 uvicorn app.main:app --reload
 ```
 
----
-
-## 📨 Application Assistant
-
-JobLens AI helps candidates prepare job applications by automatically generating:
-
-- Personalized Cover Letter
-- Professional Application Email
-- LinkedIn Outreach Message
-
-Each document is generated based on both the candidate's resume and the target job description, making every application more personalized and relevant.
-
----
-
-# 🧪 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/upload-resume` | Uploads a resume PDF for processing. |
-| POST | `/analyze-job` | Analyzes a job description and extracts structured requirements. |
-| POST | `/analyze-stream` | Executes the complete LangGraph multi-agent workflow and streams results to the frontend in real time. |
 ---
 
 # 🚀 Deployment
@@ -569,9 +630,10 @@ docker compose up --build
 ---
 
 # 📈 Future Improvements
+- **Match Score Optimization** – Improve resume–job matching using semantic similarity, skill normalization, and weighted scoring for more accurate results.
 - **Resume Optimization** – Generate ATS-friendly resume suggestions tailored to specific job descriptions using RAG and LLMs.
 - **Conversation Memory** – Persist user career history and previous analyses to provide personalized long-term guidance.
 - **Interactive AI Career Coach** – Enable multi-turn conversations for resume reviews, interview preparation, and career planning.
 - **Multi-LLM Routing** – Dynamically route tasks to the most suitable model (Groq, OpenAI, Gemini, etc.) based on latency, cost, and capability.
-- **Analytics Dashboard** – Visualize skill gaps, match scores, interview readiness, and learning progress over time.
+
 
