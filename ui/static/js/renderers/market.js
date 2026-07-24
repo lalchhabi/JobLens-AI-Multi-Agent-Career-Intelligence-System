@@ -1,32 +1,4 @@
-function renderMarket(market) {
-
-    if (!market) return "";
-    console.log("Market Object:", market);
-
-    console.log("Live Jobs:", market.live_jobs);
-
-    // ----------------------------------------
-    // Helpers
-    // ----------------------------------------
-
-    const renderTags = (list) => {
-
-        if (!list || list.length === 0) {
-            return `<p class="empty-text">No data available.</p>`;
-        }
-
-        return `
-            <div class="tags">
-                ${list.map(item => `
-                    <span class="tag">
-                        ${escapeHtml(item)}
-                    </span>
-                `).join("")}
-            </div>
-        `;
-    };
-
-    const renderJobs = (jobs) => {
+function renderJobs(jobs) {
 
         if (!jobs || jobs.length === 0) {
 
@@ -95,6 +67,34 @@ function renderMarket(market) {
 
     };
 
+
+
+
+function renderMarket(market) {
+
+    if (!market) return "";
+
+    // ----------------------------------------
+    // Helpers
+    // ----------------------------------------
+
+    const renderTags = (list) => {
+
+        if (!list || list.length === 0) {
+            return `<p class="empty-text">No data available.</p>`;
+        }
+
+        return `
+            <div class="tags">
+                ${list.map(item => `
+                    <span class="tag">
+                        ${escapeHtml(item)}
+                    </span>
+                `).join("")}
+            </div>
+        `;
+    };
+
     // ----------------------------------------
     // UI
     // ----------------------------------------
@@ -133,11 +133,45 @@ function renderMarket(market) {
 
             <div class="market-section">
 
-                <h3>
-                    Latest Jobs (${market.live_jobs?.length || 0})
-                </h3>
+                <h3>Live Job Search</h3>
 
-                ${renderJobs(market.live_jobs)}
+                <div class="job-search-controls">
+
+                    <select
+                        id="countrySelect"
+                        class="job-country-select">
+
+                        <option value="au">Australia</option>
+                        <option value="ca">Canada</option>
+                        <option value="gb">United Kingdom</option>
+                        <option value="us">United States</option>
+                        <option value="sg">Singapore</option>
+                        <option value="nz">New Zealand</option>
+                        <option value="in">India</option>
+
+                    </select>
+
+                    <button
+                        id="searchJobsBtn"
+                        class="job-apply-btn"
+                        type="button">
+
+                        Search Jobs
+
+                    </button>
+
+                </div>
+  
+                <div id="jobsContainer" class="jobs-container">
+
+                    <div class="empty-card">
+
+                        Select a country and click
+                        <strong>Search Jobs</strong>.
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -146,3 +180,81 @@ function renderMarket(market) {
     `;
 
 }
+
+window.renderJobs = renderJobs;
+
+// =====================================
+// LIVE JOB SEARCH
+// =====================================
+
+document.addEventListener("click", async (event) => {
+
+    if (event.target.id !== "searchJobsBtn")
+        return;
+
+    const country =
+        document.getElementById("countrySelect").value;
+
+    // Current target role from analysis
+    const role = state.job_analysis?.title;
+
+    if (!role) {
+
+        showToast("Job title not available.", "danger");
+
+        return;
+
+    }
+
+    const jobsContainer =
+        document.getElementById("jobsContainer");
+
+    jobsContainer.innerHTML = `
+        <div class="empty-card">
+            Searching jobs...
+        </div>
+    `;
+
+    try {
+
+        const response = await fetch("/search-jobs", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                role: role,
+                country: country
+
+            })
+
+        });
+
+        if (!response.ok) {
+
+            throw new Error("Failed to search jobs.");
+
+        }
+
+        const jobs = await response.json();
+
+        jobsContainer.innerHTML = renderJobs(jobs);
+
+    }
+    catch (err) {
+
+        console.error(err);
+
+        jobsContainer.innerHTML = `
+            <div class="empty-card">
+                Unable to load jobs.
+            </div>
+        `;
+
+    }
+
+});

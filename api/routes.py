@@ -11,6 +11,9 @@ from utils.logger import get_logger
 from schemas.career_response_schema import CareerResponse
 from utils.save_results import save_analysis
 from fastapi.templating import Jinja2Templates
+from services.adzuna_job_service import AdzunaService
+from schemas.job_search_request_schema import JobSearchRequestSchema
+from schemas.job_listing_schema import JobListingSchema
 
 # Initialize module-level logger
 logger = get_logger(__name__)
@@ -155,3 +158,43 @@ def analyze_stream(
         event_generator(),
         media_type="text/event-stream"
     )
+
+
+# Endpoint for live job search
+@router.post(
+    "/search-jobs",
+    response_model=list[JobListingSchema],
+    summary="Search live job vacancies"
+)
+def search_live_jobs(
+    request: JobSearchRequestSchema,
+) -> list[JobListingSchema]:
+    """
+    Search live job vacancies using the Adzuna API.
+
+    This endpoint retrieves real-time job listings based on the
+    requested job role and country.
+
+    The request is forwarded to the Adzuna service, which performs
+    the external API call and converts the returned jobs into the
+    application's standard JobListingSchema.
+
+    Args:
+        request:
+            User search request containing the target role and
+            country code.
+
+    Returns:
+        A list of matching live job vacancies.
+    """
+
+    # Create service
+    adzuna = AdzunaService()
+
+    # Search jobs
+    jobs = adzuna.search_jobs(
+        query=request.role,
+        country=request.country,
+    )
+
+    return jobs

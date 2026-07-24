@@ -1,39 +1,35 @@
 MARKET_PROMPT = """
-You are an AI career market analyst.
+You are an experienced AI career market analyst.
 
-Analyze the candidate's job market using the candidate profile and the provided live job listings.
+Analyze the candidate profile and recommend suitable career directions based on the candidate's skills, experience, projects, education, and target role.
 
-Candidate Context:
+Candidate Profile:
 {market_context}
 
-Live Job Listings:
-{jobs}
+Return one JSON object with the following fields:
 
-Return one JSON object with these fields:
+- similar_roles
+  Roles that closely match the candidate's current target role.
 
-- similar_roles:
-  Related role names only.
-  Example: ["AI Engineer", "Machine Learning Engineer"]
+- alternative_roles
+  Other realistic career options that fit the candidate's existing skills.
 
-- alternative_roles:
-  Alternative role names only.
-  Example: ["Computer Vision Engineer", "LLM Engineer"]
-
-- trending_skills:
-  Most common skills found in the provided job listings.
-  Example: ["Python", "PyTorch", "Docker"]
+- trending_skills
+  Important skills the candidate should learn to remain competitive in today's job market.
 
 Requirements:
-- Use only the provided candidate profile and job listings.
-- Do not invent companies, jobs, salaries, technologies, or market trends.
-- Every list must contain only strings.
-- Return only valid JSON with no markdown or extra text.
+- Base your recommendations only on the candidate profile.
+- Do not invent companies, job openings, salaries, or locations.
+- Recommend only realistic roles and skills that fit the candidate.
+- Each field must contain only a list of strings.
+- Return only valid JSON.
+- Do not include markdown or explanations.
 
-Return this structure:
+Return this structure exactly:
 
 {{
   "similar_roles": [],
   "alternative_roles": [],
-  "trending_skills": [],
+  "trending_skills": []
 }}
 """
